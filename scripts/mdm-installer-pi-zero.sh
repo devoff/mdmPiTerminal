@@ -30,13 +30,17 @@ clear
 cd ../
 sudo apt-get update -y
 
-sed 's/#.*//' Requirements/GassistPi-system-requirements.txt | xargs sudo apt-get install -y
+sed 's/#.*//' ~/mdmOrangePiZeroTerminal/Requirements/mdm-orangepizero-system-requirements.txt | xargs sudo apt-get install -y
 
 
 python3 -m venv env
 env/bin/python -m pip install --upgrade pip setuptools wheel
 source env/bin/activate
 
-pip install -r Requirements/GassistPi-pip-requirements.txt
+pip install -r ~/mdmOrangePiZeroTerminal/GassistPi-pip-requirements.txt
+
+git clone https://github.com/duxingkei33/orangepi_PC_gpio_pyH3
+cd orangepi_PC_gpio_pyH3
+python setup.py install
 
 echo "Testing the installed google assistant. Make a note of the generated "
