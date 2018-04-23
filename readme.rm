@@ -1,13 +1,3 @@
-Установка 
-
-Для запуска записи файла модели 
-
-rec -r 16000 -c 1 -b 16 -e signed-integer 1.wav
-ctrl+c 
-python2 /home/pi/mdmOrangePiZeroTerminal/src/training_service.py 1.wav 2.wav 3.wav alice_privet.pmdl
-cp alice_privet.pmdl /home/pi/mdmOrangePiZeroTerminal/src/resources/
-
-
 
 Установка 
 
