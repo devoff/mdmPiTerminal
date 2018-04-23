@@ -24,6 +24,10 @@ ctrl+c
 alice_privet.pmdl - название модели, которое нужно прописать в файле snowboy.py
 python2 training_service.py 1.wav 2.wav 3.wav alice_privet.pmdl 
 
+Теперь нужно прописать модели в файле src/snowboy.py
+cd.. 
+nano snowboy.py 21 строка - нужен прямой путь до моделей - в скрипте стоит 2 штуки, если меньше нужно убрать в 69 строке один  detected если больше то добавить 
+
 Теперь нужно отредактировать файл озвучки, указав API yandex  
 cd ..
 nano tts.py
