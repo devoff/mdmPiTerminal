@@ -1,5 +1,6 @@
 libxml2-dev
 libxslt-dev
+libatlas-base-dev
 python-dev
 portaudio19-dev
 libffi-dev
@@ -12,3 +13,6 @@ socat
 mpg123
 nmap
 mpd
+flac
+sox
+python-pip

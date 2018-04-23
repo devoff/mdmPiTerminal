@@ -1,0 +1,47 @@
+Установка 
+
+Для запуска записи файла модели 
+
+rec -r 16000 -c 1 -b 16 -e signed-integer 1.wav
+ctrl+c 
+python2 /home/pi/mdmOrangePiZeroTerminal/src/training_service.py 1.wav 2.wav 3.wav alice_privet.pmdl
+cp alice_privet.pmdl /home/pi/mdmOrangePiZeroTerminal/src/resources/
+
+
+
+Установка 
+
+cd ~/
+git clone https://github.com/devoff/mdmPiTerminal
+cd mdmPiTerminal
+chmod +x scripts/mdm-pi-installer.sh
+./scripts/mdm-pi-installer.sh
+
+Ждем пока установится SnowBoy и все зависимости. 
+
+Я бы рекомендовал записать образцы голоса сразу на терминале с тем микрофоном который будет использоваться, для этого запишем 3 wav файла, после записи ctrl+c 
+Но можно зарегестрр=ироваться на сайте - https://snowboy.kitt.ai/ и записать там, либо скачать готовые модели голоса. 
+
+cd src/resources/
+rec -r 16000 -c 1 -b 16 -e signed-integer 1.wav
+ctrl+c 
+rec -r 16000 -c 1 -b 16 -e signed-integer 2.wav
+ctrl+c 
+rec -r 16000 -c 1 -b 16 -e signed-integer 3.wav
+ctrl+c 
+
+Выполним скрипт - (в скрипте стоит мой API от snowboy, если хотите поменять, пройдите регистрацию и в настройках получите API)
+alice_privet.pmdl - название модели, которое нужно прописать в файле snowboy.py
+python2 training_service.py 1.wav 2.wav 3.wav alice_privet.pmdl 
+
+Теперь нужно отредактировать файл озвучки, указав API yandex  
+cd ..
+nano tts.py
+
+теперь можно попробовать запустить 
+cd ..
+source env/bin/activate # Активируем виртулизацию питона
+python src/snowboy.py
+
+
+В файле src/snowboy.py нужно отредактировать ссылку на MDM в 50 строке 
