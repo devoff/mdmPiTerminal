@@ -1,0 +1,17 @@
+[Unit]
+Description=MDM Pi Terminal
+After=network.target
+
+
+[Service]
+Environment=VIRTUAL_ENV=/root/mdmPiTerminal/env
+Environment=PATH=/root/mdmPiTerminal/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/root/mdmPiTerminal/env/bin/python -u /root/mdmPiTerminal/src/snowboy.py
+WorkingDirectory=/root/mdmPiTerminal/
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
