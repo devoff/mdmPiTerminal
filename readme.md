@@ -88,7 +88,7 @@ chmod +x systemd/service-installer.sh
 что бы работал SayReply нужно отредактировать файл  lib/common.class.php
 
 заменить с 40 по 126 строку на - (не забыв сменить IP адрес МДМ в строчках где есть IP) 
-
+```
 /**
  * Summary of sayTo
  * @param mixed $ph        Phrase
@@ -138,7 +138,7 @@ chmod +x systemd/service-installer.sh
         $cachedVoiceDir = ROOT . 'cached/voice';
         $cachedFileName = $cachedVoiceDir . '/' . $filename;
 
-        $base_url       = 'https://tts.voicetech.yandex.net/generate?key=3a5d503c-d9a8-489d-a100-954294c36cf8&text='.urlencode($ph).'&format=mp3&quality=hi&speaker=alyss&emotion=good'; 
+        $base_url       = 'https://tts.voicetech.yandex.net/generate?key=YANDEX API&text='.urlencode($ph).'&format=mp3&quality=hi&speaker=alyss&emotion=good'; 
         DebMes($base_url);
 
       if (!file_exists($cachedFileName))
@@ -176,7 +176,7 @@ chmod +x systemd/service-installer.sh
   }
   return 0;
  }
- 
+ ```
  
  После этого в админке МДМ в разделе терминалы добавить терминал 
  системное имя mpd
