@@ -29,7 +29,7 @@ chmod +x scripts/mdm-pi-installer.sh
 для этого нужно получиться пройти регистрация на сайте https://snowboy.kitt.ai/ в разделе "Профиль" получить API и прописать его в файле raining_service.py 
 
 ```
-nano ~\mdmPiTerminal_git\src\resources\training_service.py
+nano ~/mdmPiTerminal/src/resources/training_service.py
 ```
 
 Далее нужно записать 3 wav файла, после записи ctrl+c 
@@ -56,12 +56,11 @@ python2 training_service.py 1.wav 2.wav 3.wav alice_privet.pmdl
 в скрипте стоит 2 модели, если меньше нужно убрать в 83 строке один  detected если больше то добавить  ( callbacks = [detected, detected] )
 
 ```
-cd.. 
+cd ..
 nano snowboy.py
 ```
 Теперь нужно отредактировать файл озвучки, указав API yandex 
 ```
-cd ..
 nano tts.py
 ```
 
