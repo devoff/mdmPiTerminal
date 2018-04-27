@@ -8,7 +8,7 @@ import hashlib
 
 ##Speech and translator declarations
 words = '1'
-ttsfilename="/tmp/" + words + ".mp3"
+ttsfilename="/tmp/" + words + ".wav"
 translator = Translator()
 language='ru-RU'
 key = "3a5d503c-d9a8-489d-a100-954294c36cf8"
@@ -29,17 +29,17 @@ def say(words):
         if file.endswith(md5+".mp3"):
           filemp3 = (os.path.join(file))
 		  
-    if filemp3 == md5+".mp3":
-      os.system("mpg123 -q /tmp/"+ filemp3)
+    if filemp3 == md5+".wav":
+      os.system("aplay -q /tmp/"+ filemp3)
       print ("Файл уже записан") 
     else:
       print ("Генерируем файл") 
       #tts = gTTS(text=words, lang=language)
-      tts = TTS("alyss", "mp3", key, lang=language,emotion="good")
+      tts = TTS("alyss", "wav", key, lang=language,emotion="good")
       tts.generate(words)
       words = hashlib.sha1(words.encode('utf-8')).hexdigest()
-      ttsfilename="/tmp/" + words + ".mp3"
+      ttsfilename="/tmp/" + words + ".wav"
       tts.save(ttsfilename)
-      os.system("mpg123 -q "+ttsfilename)
+      os.system("aplay -q "+ttsfilename)
       #os.remove(ttsfilename)
     
