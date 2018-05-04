@@ -26,7 +26,7 @@ def say(words):
     md5 = hashlib.sha1(words.encode('utf-8')).hexdigest()
     filemp3 = ""
     for file in os.listdir("/tmp/"):
-        if file.endswith(md5+".mp3"):
+        if file.endswith(md5+".wav"):
           filemp3 = (os.path.join(file))
 		  
     if filemp3 == md5+".wav":

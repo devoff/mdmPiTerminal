@@ -17,7 +17,7 @@ model1 = 'privet-alice.pmdl'
 model2 = 'alice_privet.pmdl'
 
 #Адрес до MajorDomo 
-urlmjd = 'http://192.168.1.10'
+urlmjd = 'http://192.168.2.62'
 
 home = os.path.abspath(os.path.dirname(__file__)) 
 
@@ -60,8 +60,8 @@ def detected():
            print(command)
            subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
            #snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
-           #link=urlmjd+'/command.php?qry=' + urllib.parse.quote_plus(command)
-           #f=urllib.request.urlopen(link)
+           link=urlmjd+'/command.php?qry=' + urllib.parse.quote_plus(command)
+           f=urllib.request.urlopen(link)
    except  sr.UnknownValueError:
            random_item = random.SystemRandom().choice(["Вы что то сказали ?", "Я ничего не услышала", "Что Вы спросили?", "Не поняла"])
            say (random_item)
