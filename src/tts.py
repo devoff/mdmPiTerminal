@@ -14,8 +14,6 @@ language='ru-RU'
 key = "3a5d503c-d9a8-489d-a100-954294c36cf8"
 
 
-
-
 #Text to speech converter with translation
 def say(words):
 #    words= translator.translate(words, dest=language)
@@ -27,19 +25,20 @@ def say(words):
     filemp3 = ""
     for file in os.listdir("/tmp/"):
         if file.endswith(md5+".wav"):
-          filemp3 = (os.path.join(file))
-		  
+            filemp3 = (os.path.join(file))
+
     if filemp3 == md5+".wav":
-      os.system("aplay -q /tmp/"+ filemp3)
-      print ("Файл уже записан") 
+        print ("Файл уже записан")
+        os.system("aplay -q /tmp/"+ filemp3)
+        print ("И его проиграли")
     else:
-      print ("Генерируем файл") 
-      #tts = gTTS(text=words, lang=language)
-      tts = TTS("alyss", "wav", key, lang=language,emotion="good")
-      tts.generate(words)
-      words = hashlib.sha1(words.encode('utf-8')).hexdigest()
-      ttsfilename="/tmp/" + words + ".wav"
-      tts.save(ttsfilename)
-      os.system("aplay -q "+ttsfilename)
-      #os.remove(ttsfilename)
-    
+        print ("Генерируем файл")
+        #tts = gTTS(text=words, lang=language)
+        tts = TTS("alyss", "wav", key, lang=language,emotion="good")
+        tts.generate(words)
+        words = hashlib.sha1(words.encode('utf-8')).hexdigest()
+        ttsfilename="/tmp/" + words + ".wav"
+        tts.save(ttsfilename)
+        os.system("aplay -q "+ttsfilename)
+        #os.remove(ttsfilename)
+
