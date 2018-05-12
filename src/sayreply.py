@@ -8,6 +8,7 @@ import subprocess
 import os
 import speech_recognition as sr
 import json
+import configparser
 from urllib.parse import unquote
 from tts import say
 from time import sleep
@@ -15,13 +16,18 @@ from time import sleep
 import urllib.request
 
 home = os.path.abspath(os.path.dirname(__file__)) 
+path = home+'/settings.ini'
 #Адрес до MajorDomo 
 urlmjd = 'http://192.168.2.62'
 
 
 
+
+
+
 def detected():
    try:
+       getConfig (path)
        if ALARMKWACTIVATED == "1":
            subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
        index = pyaudio.PyAudio().get_device_count() - 1
@@ -80,8 +86,6 @@ def parse(conn, addr):# обработка соединения в отдель�
     print (udata)
     # разбиваем по пробелам нашу строку
     method, text = udata.split(":", maxsplit=1)
-    #text = address[address.find("tts:")+1:]
-    #text = unquote(text)
     if method == 'tts' :
        sleep(0.5)
        say (text)
@@ -89,38 +93,83 @@ def parse(conn, addr):# обработка соединения в отдель�
        detected()
     if method == 'settings' : 
        settings = text
-       json_string = settings
-              
-       with open(home+'/config.xml', 'w', encoding='utf-8') as file:
-           json.dump(json_string, file)
-       jsonimport()
-       
-def jsonimport():
-    global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT
-    with open(home+'/config.xml') as data_file:    
-           json_data = json.load(data_file)
-		   
-    parsed_data = json.loads(json_data)
-    ID = parsed_data["ID"] #номер терминала
-    TITLE = parsed_data["TITLE"] #навазние терминала 
-    NAME = parsed_data["NAME"] #Системное имя
-    LINKEDROOM = parsed_data["LINKEDROOM"] #Расположение 
-    IP = parsed_data["IP"]
-    PROVIDERTTS = parsed_data["PROVIDERTTS"] # Сервис синтеза речи
-    APIKEYTTS = parsed_data["APIKEYTTS"] #Ключ API сервиса синтеза речи:
-    PROVIDERSTT = parsed_data["PROVIDERSTT"] #Сервис распознования речи
-    APIKEYSTT = parsed_data["APIKEYSTT"] #Ключ API сервиса распознования речи:
-    SENSITIVITY = parsed_data["SENSITIVITY"] #Чувствительность реагирования на ключевое слово
-    ALARMKWACTIVATED = parsed_data["ALARMKWACTIVATED"] #Сигнал о распозновании ключевого слова
-    ALARMTTS = parsed_data["ALARMTTS"] #Сигнал перед сообщением
-    ALARMSTT = parsed_data["ALARMSTT"] #Сигнал перед начале распознования речи
-    print (ALARMTTS)
-    
-       
+       translation_table = dict.fromkeys(map(ord, '{"}'), None)
+       settings = settings.translate(translation_table)
+       settings = (settings.split(','))
+       config = configparser.ConfigParser()
+       config.add_section("Settings")
+       for temp in settings: 
+           obj, param = temp.split(":", maxsplit=1)
+           config.set("Settings", obj, param)
+           print (obj+":"+param)
+           
+       with open(path, "w") as config_file:
+           config.write(config_file) 
+       getConfig (path)
+    if method == 'rec' :
+        if text == "rec1": 	
+       #os.system("rec -r 16000 -c 1 -b 16 -e signed-integer /tmp/1.wav")
+           try: 
+               subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+               subprocess.call(["rec", "/tmp/1.wav"], timeout = 5)
+
+           except subprocess.TimeoutExpired:
+               subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+               print ("Запись первого файла завершена")
+           
+        elif text == "rec2":
+           try: 
+               subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+               subprocess.call(["rec", "/tmp/2.wav"], timeout = 5)
+           except subprocess.TimeoutExpired:
+               subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+               print ("Запись первого файла завершена")
+               
+        elif text == "rec3":
+           try: 
+               subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+               subprocess.call(["rec", "/tmp/3.wav"], timeout = 5)
+           except subprocess.TimeoutExpired:
+               subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+               print ("Запись первого файла завершена")
+            
+        elif text == "play1":
+           os.system("aplay /tmp/1.wav") 
+        elif text == "play2":
+           os.system("aplay /tmp/2.wav") 
+        elif text == "play3":
+           os.system("aplay /tmp/3.wav") 
+        elif text == "send":
+           say ("Отправляю модель на обработку");
+           os.system("python2 "+home+"/resources/training_service.py /tmp/1.wav /tmp/2.wav /tmp/3.wav "+home+"/resources/model1.pmdl") 
+           #print ("python "+home+"/resources/training_service.py /tmp/1.wav /tmp/2.wav /tmp/3.wav"+home+" /resources/model1.pmdl")
+           say ("Модель голоса создана успешно");
+
+def getConfig (path):
+    try:
+        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP
+        config = configparser.ConfigParser()
+        config.read(path)
+        ID = config.get("Settings", "ID") #номер терминала
+        TITLE = config.get("Settings", "TITLE") #навазние терминала 
+        NAME = config.get("Settings", "NAME") #Системное имя
+        LINKEDROOM = config.get("Settings", "LINKEDROOM") #Расположение 
+        IP = config.get("Settings", "IP")
+        PROVIDERTTS = config.get("Settings", "PROVIDERTTS") # Сервис синтеза речи
+        APIKEYTTS = config.get("Settings", "APIKEYTTS") #Ключ API сервиса синтеза речи:
+        PROVIDERSTT = config.get("Settings", "PROVIDERSTT") #Сервис распознования речи
+        APIKEYSTT = config.get("Settings", "APIKEYSTT") #Ключ API сервиса распознования речи:
+        SENSITIVITY = config.get("Settings", "SENSITIVITY") #Чувствительность реагирования на ключевое слово
+        ALARMKWACTIVATED = config.get("Settings", "ALARMKWACTIVATED") #Сигнал о распозновании ключевого слова
+        ALARMTTS = config.get("Settings", "ALARMTTS") #Сигнал перед сообщением
+        ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
+        print ("Конфигурация загружена")
+        
+    except:
+        print ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
 
 
-
-jsonimport()	   
+getConfig (path)   	   
 sock = socket.socket()
 sock.bind( ("", 7999) )
 sock.listen(1)
