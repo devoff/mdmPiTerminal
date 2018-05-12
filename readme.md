@@ -78,7 +78,14 @@ python src/snowboy.py
 ```
 cd ..
 chmod +x systemd/service-installer.sh
-./systemd/service-installer.sh
+sudo ./systemd/service-installer.sh
+
+sudo systemctl enable mdmpiterminal.service
+sudo systemctl enable mdmpiterminalsayreply.service
+
+sudo systemctl start mdmpiterminal.service
+sudo systemctl start mdmpiterminalsayreply.service
+
 ```
 **************************************************
 ## **Изменения в МДМ**
