@@ -158,15 +158,16 @@ class HotwordDetector(object):
             if len(data) == 0:
                 time.sleep(sleep_time)
                 continue
-
+            
             ans = self.detector.RunDetection(data)
             if ans == -1:
                 logger.warning("Error initializing streams or reading audio data")
             elif ans > 0:
-                message = "Keyword " + str(ans) + " detected at time: "
+                message = "Ключевое слово " + str(ans) + " сработало в : "
                 message += time.strftime("%Y-%m-%d %H:%M:%S",
                                          time.localtime(time.time()))
                 logger.info(message)
+                
                 callback = detected_callback[ans-1]
                 if callback is not None:
                     callback()

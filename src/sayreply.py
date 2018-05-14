@@ -47,7 +47,7 @@ def detected():
            if ALARMSTT == "1":
                subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
            #snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
-           link=urlmjd+'/command.php?qry=' + urllib.parse.quote_plus(command)
+           link=IP_SERVER+'/command.php?qry=' + urllib.parse.quote_plus(command)
            f=urllib.request.urlopen(link)
    except  sr.UnknownValueError as e:
            print("Произошла ошибка  {0}".format(e))
@@ -147,7 +147,7 @@ def parse(conn, addr):# обработка соединения в отдель�
 
 def getConfig (path):
     try:
-        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP
+        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER
         config = configparser.ConfigParser()
         config.read(path)
         ID = config.get("Settings", "ID") #номер терминала
@@ -163,6 +163,7 @@ def getConfig (path):
         ALARMKWACTIVATED = config.get("Settings", "ALARMKWACTIVATED") #Сигнал о распозновании ключевого слова
         ALARMTTS = config.get("Settings", "ALARMTTS") #Сигнал перед сообщением
         ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
+		IP_SERVER = config.get("Settings", "IP_SERVER") #Сервер МДМ
         print ("Конфигурация загружена")
         
     except:

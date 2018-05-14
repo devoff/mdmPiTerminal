@@ -17,16 +17,12 @@ import random
 model1 = 'privet-alice.pmdl'
 model2 = 'alice_privet.pmdl'
 
-#Адрес до MajorDomo 
-urlmjd = 'http://192.168.2.62'
-
 home = os.path.abspath(os.path.dirname(__file__)) 
 path = home+'/settings.ini'
 
 subprocess.Popen(["aplay", home+"/snd/Startup.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 interrupted = False
-
 #Ссылки на голосовые модели 
 
 models = [home+'/resources/'+model1, home+'/resources/'+model2]
@@ -35,7 +31,7 @@ models = [home+'/resources/'+model1, home+'/resources/'+model2]
 # Загрузка конфига 
 def getConfig (path):
     try:
-        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP
+        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER
         config = configparser.ConfigParser()
         config.read(path)
         ID = config.get("Settings", "ID") #номер терминала
@@ -51,6 +47,7 @@ def getConfig (path):
         ALARMKWACTIVATED = config.get("Settings", "ALARMKWACTIVATED") #Сигнал о распозновании ключевого слова
         ALARMTTS = config.get("Settings", "ALARMTTS") #Сигнал перед сообщением
         ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
+        IP_SERVER = config.get("Settings", "IP_SERVER") #Сервер МДМ
         print ("Конфигурация загружена")
         
     except:
@@ -77,40 +74,46 @@ def detected():
        r = sr.Recognizer()
        with sr.Microphone(device_index=7) as source:
            r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать. 
-           random_item = random.SystemRandom().choice(["Привет", "Слушаю", "На связи", "Да госпадин"])
+           random_item = random.SystemRandom().choice(["Привет", "Слушаю", "На связи", "Привет-Привет"])
            say (random_item)
            audio = r.listen(source, timeout = 10)
            if ALARMTTS == "1":
                subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
            #snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
-           print("Processing !")
-           #command=r.recognize_wit(audio, key="2S2VKVFO5X7353BN4X6YBX56L4S2IZT4")
-           command=r.recognize_google(audio, language="ru-RU")
+           print("Processing ... Для распознования используем "+PROVIDERSTT)
+           #
+           if PROVIDERSTT == "Google":
+               command=r.recognize_google(audio, language="ru-RU")
+           elif PROVIDERSTT == "Wit.ai":
+               command=r.recognize_wit(audio, key=APIKEYSTT)
+           elif PROVIDERSTT == "Microsoft":
+               command=r.recognize_bing(audio, key=APIKEYSTT)
            print(command)
            if ALARMTTS == "1":
                subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
            #snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
-           link=urlmjd+'/command.php?qry=' + urllib.parse.quote_plus(command)
+           link="http://"+IP_SERVER+'/command.php?qry=' + urllib.parse.quote_plus(command)
            f=urllib.request.urlopen(link)
    except  sr.UnknownValueError:
            random_item = random.SystemRandom().choice(["Вы что то сказали ?", "Я ничего не услышала", "Что Вы спросили?", "Не поняла"])
            say (random_item)
-           detected
+
 
    except sr.RequestError as e:
-           print("Произошла ошибка  {0}".format(e))
            say ("Произошла ошибка  {0}".format(e))
 
    except sr.WaitTimeoutError:
-           print ("Я ничего не услышала")
-           say ("Я ничего не услышала")
+           random_item = random.SystemRandom().choice(["Вы что то сказали ?", "Я ничего не услышала", "Что Вы спросили?", "Не поняла"])
+           say (random_item)
+           #say ("говорите после сигнала")
+           #detected()
 
 # Загрузка конфига 
 getConfig (path)
 #capture SIGINT signal, e.g., Ctrl+C
 signal.signal(signal.SIGINT, signal_handler)
 
-sensitivity = [0.4]*len(models) #уровень распознования, чем больше значение, тем больше ложных срабатываней 
+sensitivity = [SENSITIVITY]*len(models) #уровень распознования, чем больше значение, тем больше ложных срабатываней 
 detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
 callbacks = [detected, detected]
 
