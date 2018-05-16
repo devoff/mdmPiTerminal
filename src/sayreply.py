@@ -163,7 +163,7 @@ def getConfig (path):
         ALARMKWACTIVATED = config.get("Settings", "ALARMKWACTIVATED") #Сигнал о распозновании ключевого слова
         ALARMTTS = config.get("Settings", "ALARMTTS") #Сигнал перед сообщением
         ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
-		IP_SERVER = config.get("Settings", "IP_SERVER") #Сервер МДМ
+        IP_SERVER = config.get("Settings", "IP_SERVER") #Сервер МДМ
         print ("Конфигурация загружена")
         
     except:

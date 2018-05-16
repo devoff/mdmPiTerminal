@@ -38,8 +38,7 @@ if ! [ -d ~/tmp ]; then
 mkdir ~/tmp
 fi
 
-pip install --upgrade pip
-pip install rec requests
+
 python3 -m venv env
 env/bin/python -m pip install --upgrade pip setuptools wheel
 source env/bin/activate
