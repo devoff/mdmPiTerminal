@@ -107,7 +107,8 @@ def parse(conn, addr):# обработка соединения в отдель�
            config.write(config_file) 
        getConfig (path)
     if method == 'rec' :
-        if text == "rec1": 	
+        if text == "rec1_1": 
+        say ("Запись начнется после голосового сигнала")		
        #os.system("rec -r 16000 -c 1 -b 16 -e signed-integer /tmp/1.wav")
            try: 
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -117,21 +118,21 @@ def parse(conn, addr):# обработка соединения в отдель�
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                print ("Запись первого файла завершена")
            
-        elif text == "rec2":
+        elif text == "rec1_2":
            try: 
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                subprocess.call(["rec", "/tmp/2.wav"], timeout = 5)
            except subprocess.TimeoutExpired:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-               print ("Запись первого файла завершена")
+               print ("Запись второго файла завершена")
                
-        elif text == "rec3":
+        elif text == "rec1_3":
            try: 
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                subprocess.call(["rec", "/tmp/3.wav"], timeout = 5)
            except subprocess.TimeoutExpired:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-               print ("Запись первого файла завершена")
+               print ("Запись третьего файла завершена")
             
         elif text == "play1":
            os.system("aplay /tmp/1.wav") 
@@ -139,7 +140,7 @@ def parse(conn, addr):# обработка соединения в отдель�
            os.system("aplay /tmp/2.wav") 
         elif text == "play3":
            os.system("aplay /tmp/3.wav") 
-        elif text == "send":
+        elif text == "compile":
            say ("Отправляю модель на обработку");
            os.system("python2 "+home+"/resources/training_service.py /tmp/1.wav /tmp/2.wav /tmp/3.wav "+home+"/resources/model1.pmdl") 
            #print ("python "+home+"/resources/training_service.py /tmp/1.wav /tmp/2.wav /tmp/3.wav"+home+" /resources/model1.pmdl")

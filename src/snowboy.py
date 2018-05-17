@@ -48,6 +48,7 @@ def getConfig (path):
         ALARMTTS = config.get("Settings", "ALARMTTS") #Сигнал перед сообщением
         ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
         IP_SERVER = config.get("Settings", "IP_SERVER") #Сервер МДМ
+		FIRSTBOOT = config.get("Settings", "firstboot")
         print ("Конфигурация загружена")
         
     except:
@@ -72,7 +73,7 @@ def detected():
        index = pyaudio.PyAudio().get_device_count() - 1
        print (index)
        r = sr.Recognizer()
-       with sr.Microphone(device_index=7) as source:
+       with sr.Microphone(device_index=2) as source:
            r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать. 
            random_item = random.SystemRandom().choice(["Привет", "Слушаю", "На связи", "Привет-Привет"])
            say (random_item)
