@@ -108,7 +108,7 @@ def parse(conn, addr):# обработка соединения в отдель�
        getConfig (path)
     if method == 'rec' :
         if text == "rec1_1": 
-            say ("Запись начнется после голосового сигнала")		
+           say ("Запись начнется после голосового сигнала")		
        #os.system("rec -r 16000 -c 1 -b 16 -e signed-integer /tmp/1.wav")
            try: 
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
