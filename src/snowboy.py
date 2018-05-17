@@ -48,7 +48,7 @@ def getConfig (path):
         ALARMTTS = config.get("Settings", "ALARMTTS") #Сигнал перед сообщением
         ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
         IP_SERVER = config.get("Settings", "IP_SERVER") #Сервер МДМ
-		FIRSTBOOT = config.get("Settings", "firstboot")
+        FIRSTBOOT = config.get("Settings", "firstboot")
         print ("Конфигурация загружена")
         
     except:
