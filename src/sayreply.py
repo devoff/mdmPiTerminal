@@ -134,11 +134,11 @@ def parse(conn, addr):# обработка соединения в отдель�
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                print ("Запись третьего файла завершена")
             
-        elif text == "play1":
+        elif text == "play1_1":
            os.system("aplay /tmp/1.wav") 
-        elif text == "play2":
+        elif text == "play2_1":
            os.system("aplay /tmp/2.wav") 
-        elif text == "play3":
+        elif text == "play3_1":
            os.system("aplay /tmp/3.wav") 
         elif text == "compile":
            say ("Отправляю модель на обработку");
