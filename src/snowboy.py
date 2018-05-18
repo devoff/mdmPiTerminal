@@ -11,14 +11,20 @@ import urllib.request
 from tts import say
 import configparser
 import random
+import socket
+import fcntl
+import struct
+
 
 ##### Настройки #####
 #Название файлов модели. 
-model1 = 'privet-alice.pmdl'
-model2 = 'alice_privet.pmdl'
+model1 = 'model1.pmdl'
+model2 = 'model2.pmdl'
 
 home = os.path.abspath(os.path.dirname(__file__)) 
 path = home+'/settings.ini'
+config = configparser.ConfigParser()
+
 
 subprocess.Popen(["aplay", home+"/snd/Startup.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -31,8 +37,8 @@ models = [home+'/resources/'+model1, home+'/resources/'+model2]
 # Загрузка конфига 
 def getConfig (path):
     try:
-        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER
-        config = configparser.ConfigParser()
+        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY1, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER, FIRSTBOOT
+        
         config.read(path)
         ID = config.get("Settings", "ID") #номер терминала
         TITLE = config.get("Settings", "TITLE") #навазние терминала 
@@ -43,16 +49,16 @@ def getConfig (path):
         APIKEYTTS = config.get("Settings", "APIKEYTTS") #Ключ API сервиса синтеза речи:
         PROVIDERSTT = config.get("Settings", "PROVIDERSTT") #Сервис распознования речи
         APIKEYSTT = config.get("Settings", "APIKEYSTT") #Ключ API сервиса распознования речи:
-        SENSITIVITY = config.get("Settings", "SENSITIVITY") #Чувствительность реагирования на ключевое слово
+        SENSITIVITY1 = config.get("Settings", "SENSITIVITY") #Чувствительность реагирования на ключевое слово
         ALARMKWACTIVATED = config.get("Settings", "ALARMKWACTIVATED") #Сигнал о распозновании ключевого слова
         ALARMTTS = config.get("Settings", "ALARMTTS") #Сигнал перед сообщением
         ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
         IP_SERVER = config.get("Settings", "IP_SERVER") #Сервер МДМ
-        FIRSTBOOT = config.get("Settings", "firstboot")
+        FIRSTBOOT = config.get("Boot", "firstboot")
         print ("Конфигурация загружена")
         
     except:
-        print ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
+        say ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
 
 def signal_handler(signal, frame):
     global interrupted
@@ -109,12 +115,24 @@ def detected():
            #say ("говорите после сигнала")
            #detected()
 
+def get_ip_address():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]	   
+
 # Загрузка конфига 
 getConfig (path)
+if FIRSTBOOT == "1":
+    ip = (get_ip_address())
+    say ("Это первая загрузка терминала, пожалуйста, пропишите IP адрес в настройках МайжерДомо, мой IP адрес: "+ip)
+    config.set("Boot", "firstboot", "0" )
+    with open(path, "w") as config_file:
+        config.write(config_file) 
+    getConfig (path)
 #capture SIGINT signal, e.g., Ctrl+C
 signal.signal(signal.SIGINT, signal_handler)
 
-sensitivity = [SENSITIVITY]*len(models) #уровень распознования, чем больше значение, тем больше ложных срабатываней 
+sensitivity = [SENSITIVITY1]*len(models) #уровень распознования, чем больше значение, тем больше ложных срабатываней 
 detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
 callbacks = [detected, detected]
 

@@ -17,8 +17,6 @@ import urllib.request
 
 home = os.path.abspath(os.path.dirname(__file__)) 
 path = home+'/settings.ini'
-#Адрес до MajorDomo 
-urlmjd = 'http://192.168.2.62'
 
 
 
@@ -40,13 +38,17 @@ def detected():
            if ALARMTTS == "1":
                subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
            #snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
-           print("Processing !")
-           #command=r.recognize_wit(audio, key="2S2VKVFO5X7353BN4X6YBX56L4S2IZT4")
-           command=r.recognize_google(audio, language="ru-RU")
+           print("Processing ... Для распознования используем "+PROVIDERSTT)
+           #
+           if PROVIDERSTT == "Google":
+               command=r.recognize_google(audio, language="ru-RU")
+           elif PROVIDERSTT == "Wit.ai":
+               command=r.recognize_wit(audio, key=APIKEYSTT)
+           elif PROVIDERSTT == "Microsoft":
+               command=r.recognize_bing(audio, key=APIKEYSTT)
            print(command)
-           if ALARMSTT == "1":
+           if ALARMTTS == "1":
                subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-           #snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
            link=IP_SERVER+'/command.php?qry=' + urllib.parse.quote_plus(command)
            f=urllib.request.urlopen(link)
    except  sr.UnknownValueError as e:
@@ -102,49 +104,59 @@ def parse(conn, addr):# обработка соединения в отдель�
            obj, param = temp.split(":", maxsplit=1)
            config.set("Settings", obj, param)
            print (obj+":"+param)
-           
+       config.add_section("Boot")
+       config.set("Boot", "firstboot", "0" )
        with open(path, "w") as config_file:
            config.write(config_file) 
        getConfig (path)
     if method == 'rec' :
         if text == "rec1_1": 
-           say ("Запись начнется после голосового сигнала")		
+           say ("Запись на 5 секунд начнется после голосового сигнала")		
        #os.system("rec -r 16000 -c 1 -b 16 -e signed-integer /tmp/1.wav")
            try: 
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+               sleep(0.3)
                subprocess.call(["rec", "/tmp/1.wav"], timeout = 5)
 
            except subprocess.TimeoutExpired:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-               print ("Запись первого файла завершена")
+               sleep(0.3)
+               say ("Запись первого файла завершена")
            
         elif text == "rec1_2":
            try: 
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+               sleep(0.3)
                subprocess.call(["rec", "/tmp/2.wav"], timeout = 5)
            except subprocess.TimeoutExpired:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-               print ("Запись второго файла завершена")
+               sleep(0.3)
+               say ("Запись второго файла завершена")
                
         elif text == "rec1_3":
            try: 
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+               sleep(0.3)
                subprocess.call(["rec", "/tmp/3.wav"], timeout = 5)
            except subprocess.TimeoutExpired:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-               print ("Запись третьего файла завершена")
+               sleep(0.3)
+               say ("Запись третьего файла завершена")
             
         elif text == "play1_1":
            os.system("aplay /tmp/1.wav") 
-        elif text == "play2_1":
+        elif text == "play1_2":
            os.system("aplay /tmp/2.wav") 
-        elif text == "play3_1":
+        elif text == "play1_3":
            os.system("aplay /tmp/3.wav") 
         elif text == "compile":
            say ("Отправляю модель на обработку");
-           os.system("python2 "+home+"/resources/training_service.py /tmp/1.wav /tmp/2.wav /tmp/3.wav "+home+"/resources/model1.pmdl") 
-           #print ("python "+home+"/resources/training_service.py /tmp/1.wav /tmp/2.wav /tmp/3.wav"+home+" /resources/model1.pmdl")
-           say ("Модель голоса создана успешно");
+           try:
+               os.system(home+"/resources/training_service.sh /tmp/1.wav /tmp/2.wav /tmp/3.wav "+home+"/resources/model1.pmdl") 
+               print (home+"/resources/training_service.sh /tmp/1.wav /tmp/2.wav /tmp/3.wav "+home+"/resources/model1.pmdl")
+               say ("Модель голоса создана успешно");
+           except:
+               say ("Произошла ошибка при отправке");
 
 def getConfig (path):
     try:
@@ -166,6 +178,7 @@ def getConfig (path):
         ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
         IP_SERVER = config.get("Settings", "IP_SERVER") #Сервер МДМ
         print ("Конфигурация загружена")
+        
         
     except:
         print ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
