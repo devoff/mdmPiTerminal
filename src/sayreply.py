@@ -12,7 +12,9 @@ import configparser
 from urllib.parse import unquote
 from tts import say
 from time import sleep
-
+import snowboydecoder
+import fcntl
+import struct
 import urllib.request
 
 home = os.path.abspath(os.path.dirname(__file__)) 
@@ -49,7 +51,7 @@ def detected():
            print(command)
            if ALARMTTS == "1":
                subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-           link=IP_SERVER+'/command.php?qry=' + urllib.parse.quote_plus(command)
+           link="http://"+IP_SERVER+'/command.php?qry=' + urllib.parse.quote_plus(command)
            f=urllib.request.urlopen(link)
    except  sr.UnknownValueError as e:
            print("Произошла ошибка  {0}".format(e))
@@ -160,10 +162,10 @@ def parse(conn, addr):# обработка соединения в отдель�
 
 def getConfig (path):
     try:
-        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER
+        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER, FIRSTBOOT
         config = configparser.ConfigParser()
         config.read(path)
-        ID = config.get("Settings", "ID") #номер терминала
+        #ID = config.get("Settings", "ID") #номер терминала
         TITLE = config.get("Settings", "TITLE") #навазние терминала 
         NAME = config.get("Settings", "NAME") #Системное имя
         LINKEDROOM = config.get("Settings", "LINKEDROOM") #Расположение 
@@ -177,6 +179,7 @@ def getConfig (path):
         ALARMTTS = config.get("Settings", "ALARMTTS") #Сигнал перед сообщением
         ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
         IP_SERVER = config.get("Settings", "IP_SERVER") #Сервер МДМ
+        FIRSTBOOT = config.get("Boot", "firstboot")
         print ("Конфигурация загружена")
         
         
@@ -184,7 +187,15 @@ def getConfig (path):
         print ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
 
 
-getConfig (path)   	   
+
+getConfig (path)
+#if FIRSTBOOT == "1":
+#    ip = (get_ip_address())
+#    say ("Это первая загрузка терминала, пожалуйста, пропишите IP адрес в настройках МайжерДомо, мой IP адрес: "+ip)
+#    config.set("Boot", "firstboot", "0" )
+#    with open(path, "w") as config_file:
+#        config.write(config_file) 
+#    getConfig (path)  	   
 sock = socket.socket()
 sock.bind( ("", 7999) )
 sock.listen(1)
