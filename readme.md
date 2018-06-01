@@ -9,6 +9,7 @@
 **4. Подключение светодиодов (в разработке) **
 
 !!!! На данный момент протестировано на платах - 
+
 Orange Pi Zero - Armbian Ubuntu_xenial_default ядро 3.4 
 Orange Pi Zero - Armbian Ubuntu_xenial_next ядро 4.14 (обратите внимания в разделе подготовка) 
 
