@@ -137,7 +137,7 @@ sudo systemctl start mdmpiterminal.service
 sudo service mdmpiterminal stop
 sudo service mdmpiterminalsayreply stop
 ```
-* Запустить ребуемое
+* Запустить требуемое
 ```
 cd ~/
 mdmPiTerminal/env/bin/python -u mdmPiTerminal/src/snowboy.py // для запуская сервиса распознования ключевого слова 
