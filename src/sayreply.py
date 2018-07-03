@@ -186,12 +186,18 @@ def getConfig (path):
     except:
         print ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
 
-
+def get_ip_address(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(),
+        0x8915,  # SIOCGIFADDR
+        struct.pack('256s', bytes(ifname[:15], 'utf-8'))
+    )[20:24])
 
 getConfig (path)
-#if FIRSTBOOT == "1":
-#    ip = (get_ip_address())
-#    say ("Это первая загрузка терминала, пожалуйста, пропишите IP адрес в настройках МайжерДомо, мой IP адрес: "+ip)
+if FIRSTBOOT == "1":
+    ip = (get_ip_address('eth0'))
+    say ("Это первая загрузка терминала, мой IP адрес: "+ip)
 #    config.set("Boot", "firstboot", "0" )
 #    with open(path, "w") as config_file:
 #        config.write(config_file)
