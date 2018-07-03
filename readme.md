@@ -19,7 +19,7 @@
 aplay -l 
 arecord -l
 ```
-и отредактировать если нужно hw:1,0 
+и отредактировать если нужно hw:2,0 
 
 ```
 sudo nano /etc/asound.conf
@@ -53,7 +53,7 @@ ipc_key 555555
 pcm.array {
 type dsnoop
 slave {
-pcm "hw:1,0"
+pcm "hw:2,0"
 channels 2
 }
 ipc_key 666666
