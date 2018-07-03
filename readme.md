@@ -70,7 +70,7 @@ speaker-test
 1. Откройте терминал и выполните команды
 ```
 cd ~/
-git clone https://github.com/dance12r/mdmPiTerminal
+git clone https://github.com/devoff/mdmPiTerminal
 cd mdmPiTerminal
 chmod +x scripts/mdm-pi-installer.sh
 ./scripts/mdm-pi-installer.sh
