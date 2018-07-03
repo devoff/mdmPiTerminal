@@ -151,7 +151,7 @@ def parse(conn, addr):# обработка соединения в отдель�
            os.system("aplay /tmp/2.wav")
         elif text == "play1_3":
            os.system("aplay /tmp/3.wav")
-        elif text == "compile":
+        elif text == "compile1":
            say ("Отправляю модель на обработку");
            try:
                os.system(home+"/resources/training_service.sh /tmp/1.wav /tmp/2.wav /tmp/3.wav "+home+"/resources/model1.pmdl")
