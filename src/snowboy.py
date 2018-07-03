@@ -40,11 +40,11 @@ def getConfig (path):
         global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY1, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER, FIRSTBOOT
 
         config.read(path)
-        ID = config.get("Settings", "ID") #номер терминала
-        TITLE = config.get("Settings", "TITLE") #навазние терминала
-        NAME = config.get("Settings", "NAME") #Системное имя
-        #LINKEDROOM = config.get("Settings", "LINKEDROOM") #Расположение 
-        IP = config.get("Settings", "IP")
+        #ID = config.get("Settings", "ID") #номер терминала
+        #TITLE = config.get("Settings", "TITLE") #навазние терминала
+        #NAME = config.get("Settings", "NAME") #Системное имя
+        #LINKEDROOM = config.get("Settings", "LINKEDROOM") #Расположение
+        #IP = config.get("Settings", "IP")
         PROVIDERTTS = config.get("Settings", "PROVIDERTTS") # Сервис синтеза речи
         APIKEYTTS = config.get("Settings", "APIKEYTTS") #Ключ API сервиса синтеза речи:
         PROVIDERSTT = config.get("Settings", "PROVIDERSTT") #Сервис распознования речи

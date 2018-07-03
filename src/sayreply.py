@@ -17,7 +17,7 @@ import fcntl
 import struct
 import urllib.request
 
-home = os.path.abspath(os.path.dirname(__file__)) 
+home = os.path.abspath(os.path.dirname(__file__))
 path = home+'/settings.ini'
 
 
@@ -34,8 +34,8 @@ def detected():
        print (index)
        r = sr.Recognizer()
        with sr.Microphone(index) as source:
-           r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать. 
-           
+           r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать.
+
            audio = r.listen(source, timeout = 10)
            if ALARMTTS == "1":
                subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -64,26 +64,26 @@ def detected():
            print ("Я ничего не услышала")
            say ("Я ничего не услышала")
 
-		   
+
 
 
 
 def parse(conn, addr):# обработка соединения в отдельной функции
     data = b""
-    
+
     while not b"\r\n" in data: # ждём первую строку
         tmp = conn.recv(1024)
-		
+
         if not tmp:   # сокет закрыли, пустой объект
             #print ("tmp error")
             break
         else:
             data += tmp
             print ("OK tmp")
-    
+
     if not data:      # данные не пришли
         return        # не обрабатываем
-        
+
     udata = data.decode("utf-8")
     # берём только первую строку
     udata = udata.split("\r\n", 1)[0]
@@ -95,27 +95,27 @@ def parse(conn, addr):# обработка соединения в отдель�
        say (text)
     if method == 'ask' :
        detected()
-    if method == 'settings' : 
+    if method == 'settings' :
        settings = text
        translation_table = dict.fromkeys(map(ord, '{"}'), None)
        settings = settings.translate(translation_table)
        settings = (settings.split(','))
        config = configparser.ConfigParser()
        config.add_section("Settings")
-       for temp in settings: 
+       for temp in settings:
            obj, param = temp.split(":", maxsplit=1)
            config.set("Settings", obj, param)
            print (obj+":"+param)
        config.add_section("Boot")
        config.set("Boot", "firstboot", "0" )
        with open(path, "w") as config_file:
-           config.write(config_file) 
+           config.write(config_file)
        getConfig (path)
     if method == 'rec' :
-        if text == "rec1_1": 
-           say ("Запись на 5 секунд начнется после голосового сигнала")		
+        if text == "rec1_1":
+           say ("Запись на 5 секунд начнется после голосового сигнала")
        #os.system("rec -r 16000 -c 1 -b 16 -e signed-integer /tmp/1.wav")
-           try: 
+           try:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                subprocess.call(["rec", "/tmp/1.wav"], timeout = 5)
@@ -124,9 +124,9 @@ def parse(conn, addr):# обработка соединения в отдель�
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                say ("Запись первого файла завершена")
-           
+
         elif text == "rec1_2":
-           try: 
+           try:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                subprocess.call(["rec", "/tmp/2.wav"], timeout = 5)
@@ -134,9 +134,9 @@ def parse(conn, addr):# обработка соединения в отдель�
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                say ("Запись второго файла завершена")
-               
+
         elif text == "rec1_3":
-           try: 
+           try:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                subprocess.call(["rec", "/tmp/3.wav"], timeout = 5)
@@ -144,17 +144,17 @@ def parse(conn, addr):# обработка соединения в отдель�
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                say ("Запись третьего файла завершена")
-            
+
         elif text == "play1_1":
-           os.system("aplay /tmp/1.wav") 
+           os.system("aplay /tmp/1.wav")
         elif text == "play1_2":
-           os.system("aplay /tmp/2.wav") 
+           os.system("aplay /tmp/2.wav")
         elif text == "play1_3":
-           os.system("aplay /tmp/3.wav") 
+           os.system("aplay /tmp/3.wav")
         elif text == "compile":
            say ("Отправляю модель на обработку");
            try:
-               os.system(home+"/resources/training_service.sh /tmp/1.wav /tmp/2.wav /tmp/3.wav "+home+"/resources/model1.pmdl") 
+               os.system(home+"/resources/training_service.sh /tmp/1.wav /tmp/2.wav /tmp/3.wav "+home+"/resources/model1.pmdl")
                print (home+"/resources/training_service.sh /tmp/1.wav /tmp/2.wav /tmp/3.wav "+home+"/resources/model1.pmdl")
                say ("Модель голоса создана успешно");
            except:
@@ -166,10 +166,10 @@ def getConfig (path):
         config = configparser.ConfigParser()
         config.read(path)
         #ID = config.get("Settings", "ID") #номер терминала
-        TITLE = config.get("Settings", "TITLE") #навазние терминала 
-        NAME = config.get("Settings", "NAME") #Системное имя
-        LINKEDROOM = config.get("Settings", "LINKEDROOM") #Расположение 
-        IP = config.get("Settings", "IP")
+        #TITLE = config.get("Settings", "TITLE") #навазние терминала
+        #NAME = config.get("Settings", "NAME") #Системное имя
+        #LINKEDROOM = config.get("Settings", "LINKEDROOM") #Расположение
+        #IP = config.get("Settings", "IP")
         PROVIDERTTS = config.get("Settings", "PROVIDERTTS") # Сервис синтеза речи
         APIKEYTTS = config.get("Settings", "APIKEYTTS") #Ключ API сервиса синтеза речи:
         PROVIDERSTT = config.get("Settings", "PROVIDERSTT") #Сервис распознования речи
@@ -181,8 +181,8 @@ def getConfig (path):
         IP_SERVER = config.get("Settings", "IP_SERVER") #Сервер МДМ
         FIRSTBOOT = config.get("Boot", "firstboot")
         print ("Конфигурация загружена")
-        
-        
+
+
     except:
         print ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
 
@@ -194,8 +194,8 @@ getConfig (path)
 #    say ("Это первая загрузка терминала, пожалуйста, пропишите IP адрес в настройках МайжерДомо, мой IP адрес: "+ip)
 #    config.set("Boot", "firstboot", "0" )
 #    with open(path, "w") as config_file:
-#        config.write(config_file) 
-#    getConfig (path)  	   
+#        config.write(config_file)
+#    getConfig (path)
 sock = socket.socket()
 sock.bind( ("", 7999) )
 sock.listen(1)
@@ -211,8 +211,8 @@ try:
 
         except socket.timeout:
             print (addr, "timeout")
-        
-		
+
+
         finally:
             # так при любой ошибке
             # сокет закроем корректно
