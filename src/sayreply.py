@@ -19,11 +19,6 @@ import urllib.request
 home = os.path.abspath(os.path.dirname(__file__))
 path = home+'/settings.ini'
 
-
-
-
-
-
 def detected():
    try:
        getConfig (path)
@@ -34,13 +29,11 @@ def detected():
        r = sr.Recognizer()
        with sr.Microphone(index) as source:
            #r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать.
-
            audio = r.listen(source, timeout = 10)
            if ALARMTTS == "1":
                subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
            #snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
            print("Processing ... Для распознования используем "+PROVIDERSTT)
-           #
            if PROVIDERSTT == "Google":
                command=r.recognize_google(audio, language="ru-RU")
            elif PROVIDERSTT == "Wit.ai":
@@ -58,31 +51,22 @@ def detected():
    except sr.RequestError as e:
            print("Произошла ошибка  {0}".format(e))
            say ("Произошла ошибка  {0}".format(e))
-
    except sr.WaitTimeoutError:
            print ("Я ничего не услышала")
            say ("Я ничего не услышала")
 
-
-
-
-
 def parse(conn, addr):# обработка соединения в отдельной функции
     data = b""
-
     while not b"\r\n" in data: # ждём первую строку
         tmp = conn.recv(1024)
-
         if not tmp:   # сокет закрыли, пустой объект
             #print ("tmp error")
             break
         else:
             data += tmp
             print ("OK tmp")
-
     if not data:      # данные не пришли
         return        # не обрабатываем
-
     udata = data.decode("utf-8")
     # берём только первую строку
     udata = udata.split("\r\n", 1)[0]
@@ -118,12 +102,10 @@ def parse(conn, addr):# обработка соединения в отдель�
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                subprocess.call(["rec", "/tmp/1.wav"], timeout = 5)
-
            except subprocess.TimeoutExpired:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                say ("Запись первого файла завершена")
-
         elif text == "rec1_2":
            try:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -133,7 +115,6 @@ def parse(conn, addr):# обработка соединения в отдель�
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                say ("Запись второго файла завершена")
-
         elif text == "rec1_3":
            try:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -143,7 +124,6 @@ def parse(conn, addr):# обработка соединения в отдель�
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                say ("Запись третьего файла завершена")
-
         elif text == "play1_1":
            os.system("aplay /tmp/1.wav")
         elif text == "play1_2":
@@ -180,8 +160,6 @@ def getConfig (path):
         IP_SERVER = config.get("Settings", "IP_SERVER") #Сервер МДМ
         FIRSTBOOT = config.get("Boot", "firstboot")
         print ("Конфигурация загружена")
-
-
     except:
         print ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
 
@@ -202,7 +180,6 @@ sock = socket.socket()
 sock.bind( ("", 7999) )
 sock.listen(1)
 
-
 try:
     while 1: # работаем постоянно
         conn, addr = sock.accept()
@@ -210,11 +187,8 @@ try:
         print("New connection from " + addr[0])
         try:
             parse(conn, addr)
-
         except socket.timeout:
             print (addr, "timeout")
-
-
         finally:
             # так при любой ошибке
             # сокет закроем корректно
