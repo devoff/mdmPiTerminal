@@ -15,10 +15,10 @@ from time import sleep
 import fcntl
 import struct
 import urllib.request
-
+#Путь к файлу конфигурации
 home = os.path.abspath(os.path.dirname(__file__))
 path = home+'/settings.ini'
-
+#Распознавание речи
 def detected():
    try:
        getConfig (path)
@@ -54,7 +54,7 @@ def detected():
    except sr.WaitTimeoutError:
            print ("Я ничего не услышала")
            say ("Я ничего не услышала")
-
+#Соккет
 def parse(conn, addr):# обработка соединения в отдельной функции
     data = b""
     while not b"\r\n" in data: # ждём первую строку
@@ -138,7 +138,7 @@ def parse(conn, addr):# обработка соединения в отдель�
                say ("Модель голоса создана успешно");
            except:
                say ("Произошла ошибка при отправке");
-
+#Получаем конфиг
 def getConfig (path):
     try:
         global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER, FIRSTBOOT
@@ -162,7 +162,7 @@ def getConfig (path):
         print ("Конфигурация загружена")
     except:
         print ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
-
+#Нзнаем IP адрес
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
@@ -179,7 +179,7 @@ if FIRSTBOOT == "1":
 sock = socket.socket()
 sock.bind( ("", 7999) )
 sock.listen(1)
-
+#Основной цикл
 try:
     while 1: # работаем постоянно
         conn, addr = sock.accept()

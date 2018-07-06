@@ -105,7 +105,7 @@ def detected():
     detector.start(detected_callback=callbacks,
                interrupt_check=interrupt_callback,
                 sleep_time=0.03)
-#Узнаем IP адресс
+#Узнаем IP адрес
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
@@ -124,5 +124,4 @@ print('Слушаю... Нажмите Ctrl+C для выхода')
 detector.start(detected_callback=callbacks,
                interrupt_check=interrupt_callback,
                 sleep_time=0.03)
-
 detector.terminate()
