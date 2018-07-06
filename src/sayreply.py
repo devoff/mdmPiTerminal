@@ -185,13 +185,10 @@ def getConfig (path):
     except:
         print ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
 
-def get_ip_address(ifname):
+def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    return socket.inet_ntoa(fcntl.ioctl(
-        s.fileno(),
-        0x8915,  # SIOCGIFADDR
-        struct.pack('256s', bytes(ifname[:15], 'utf-8'))
-    )[20:24])
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
 
 getConfig (path)
 if FIRSTBOOT == "1":
