@@ -83,7 +83,7 @@ def detected():
 
         with sr.Microphone() as source:
             r = sr.Recognizer()
-            r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать.
+            #r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать.
             random_item = random.SystemRandom().choice(["Привет", "Слушаю", "На связи", "Привет-Привет"])
             say (random_item)
             audio = r.listen(source, timeout = 10)

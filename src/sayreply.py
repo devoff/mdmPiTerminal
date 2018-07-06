@@ -33,7 +33,7 @@ def detected():
        print (index)
        r = sr.Recognizer()
        with sr.Microphone(index) as source:
-           r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать.
+           #r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать.
 
            audio = r.listen(source, timeout = 10)
            if ALARMTTS == "1":
