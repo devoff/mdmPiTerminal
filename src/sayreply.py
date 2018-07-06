@@ -12,7 +12,6 @@ import configparser
 from urllib.parse import unquote
 from tts import say
 from time import sleep
-import snowboydecoder
 import fcntl
 import struct
 import urllib.request
