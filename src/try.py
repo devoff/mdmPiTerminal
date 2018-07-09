@@ -26,13 +26,18 @@ elif a == "compile":
     print ("/resources/training_service.sh /tmp/"+b+"/1.wav /tmp/"+b+"/2.wav /tmp/"+b+"/3.wav convert to /resources/model"+b+".pmdl")
 
 
-c = []
-root_dir = './resources'
+models = []
+root_dir = './resources/models/'
 
 for files in os.walk(root_dir):
     for file in files:
         a = os.path.join(file)
-for b in a:
-    c.append("/resources/"+b)
+for i in a:
+    models.append("/resources/models/"+i)
 
-print c
+print models
+
+callbacks = []
+for i in models:
+    callbacks.append("detected")
+print callbacks
