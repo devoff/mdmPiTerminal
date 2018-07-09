@@ -44,3 +44,5 @@ print callbacks
 
 
 os.system("sudo service mdmpiterminal restart; sudo service mdmpiterminalsayreply restart")
+
+busy = os.system("ps aux|grep 'aplay'|grep -v grep |awk '{print $2}'")
