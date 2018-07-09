@@ -3,7 +3,7 @@ import sys
 # Читаем аргумент
 if len(sys.argv) == 1:
     print("Error: need to specify text")
-    print("Usage: python try.py text")
+    print("Usage: python try.py text") # pythone try.py rec_1_1
     sys.exit(-1)
 # Присваем аргумент переменной
 text = sys.argv[1]
