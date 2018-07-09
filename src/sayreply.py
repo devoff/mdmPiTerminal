@@ -162,6 +162,7 @@ def get_ip_address():
 getConfig (path)
 if FIRSTBOOT == "1":
     ip = (get_ip_address())
+    sleep (2.0)
     say ("Это первая загрузка терминала, мой IP адрес: "+ip)
 #    config.set("Boot", "firstboot", "0" )
 #    with open(path, "w") as config_file:
