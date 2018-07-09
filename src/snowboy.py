@@ -28,7 +28,7 @@ interrupted = False
 #Ссылки на голосовые модели
 #models = [home+'/resources/'+model1, home+'/resources/'+model2]
 models = []
-root_dir = home+'/resources/models'
+root_dir = home+'/resources/models/'
 for files in os.walk(root_dir):
     for file in files:
         j = os.path.join(file)
