@@ -30,11 +30,8 @@ interrupted = False
 models = []
 root_dir = home+'/resources/models/'
 for files in os.walk(root_dir):
-    for file in files:
-        j = os.path.join(file)
-for m in j:
-    models.append("/resources/models/"+m)
-print models
+    for m in files[2]:
+        models.append(home+"/resources/models/"+m)
 # Загрузка конфига
 def getConfig (path):
     try:
@@ -129,7 +126,6 @@ detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
 callbacks = []
 for l in models:
     callbacks.append("detected")
-print callbacks
 # main loop
 # make sure you have the same numbers of callbacks and models
 print('Слушаю... Нажмите Ctrl+C для выхода')
