@@ -1,10 +1,11 @@
-#####
-#rec_1_1
-#play_1_1
-#compile_1_1
-#####
+import sys
 
-text = "rec_1_1"
+if len(sys.argv) == 1:
+    print("Error: need to specify model name")
+    print("Usage: python demo.py your.model")
+    sys.exit(-1)
+
+text = sys.argv[1]
 
 param = text.split("_")
 a = param[0]
@@ -13,29 +14,41 @@ c = param[2]
 
 if a == "rec":
     try:
-        subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        sleep(0.3)
-        subprocess.call(["rec", "/tmp/"+b+c+".wav"], timeout = 5)
+        print ("/tmp/"+b+"/"+c+".wav")
     except subprocess.TimeoutExpired:
-        subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        sleep(0.3)
         print ("Fail")
 
 elif a == "play":
-    os.system("aplay /tmp/"+b+c+".wav")
+    print ("/tmp/"+b+"/"+c+".wav")
 
 elif a == "compile":
     if c == "1":
         try:
-            os.system(home+"/resources/training_service.sh /tmp/11.wav /tmp/12.wav /tmp/13.wav "+home+"/resources/model"+c+".pmdl")
-            print (home+"/resources/training_service.sh /tmp/11.wav /tmp/12.wav /tmp/13.wav "+home+"/resources/model"+c+".pmdl")
-            print ("OK")
+            print ("/resources/training_service.sh /tmp/1/1.wav /tmp/1/2.wav /tmp/1/3.wav convert to /resources/model"+c+".pmdl")
         except:
             print ("Fail")
     elif c == "2":
         try:
-            os.system(home+"/resources/training_service.sh /tmp/21.wav /tmp/22.wav /tmp/23.wav "+home+"/resources/model"+c+".pmdl")
-            print (home+"/resources/training_service.sh /tmp/21.wav /tmp/22.wav /tmp/23.wav "+home+"/resources/model"+c+".pmdl")
-            print ("OK")
+            print ("/resources/training_service.sh /tmp/2/1.wav /tmp/2/2.wav /tmp/2/3.wav convert to /resources/model"+c+".pmdl")
+        except:
+            print ("Fail")
+    elif c == "3":
+        try:
+            print ("/resources/training_service.sh /tmp/3/1.wav /tmp/3/2.wav /tmp/3/3.wav convert to /resources/model"+c+".pmdl")
+        except:
+            print ("Fail")
+    elif c == "4":
+        try:
+            print ("/resources/training_service.sh /tmp/4/1.wav /tmp/4/2.wav /tmp/4/3.wav convert to /resources/model"+c+".pmdl")
+        except:
+            print ("Fail")
+    elif c == "5":
+        try:
+            print ("/resources/training_service.sh /tmp/5/1.wav /tmp/5/2.wav /tmp/5/3.wav convert to /resources/model"+c+".pmdl")
+        except:
+            print ("Fail")
+    elif c == "6":
+        try:
+            print ("/resources/training_service.sh /tmp/6/1.wav /tmp/6/2.wav /tmp/6/3.wav convert to /resources/model"+c+".pmdl")
         except:
             print ("Fail")
