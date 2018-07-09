@@ -28,12 +28,12 @@ interrupted = False
 #Ссылки на голосовые модели
 #models = [home+'/resources/'+model1, home+'/resources/'+model2]
 models = []
-root_dir = home+'/resources'
+root_dir = home+'/resources/models'
 for files in os.walk(root_dir):
     for file in files:
         j = os.path.join(file)
 for m in j:
-    models.append("/resources/"+m)
+    models.append("/resources/models/"+m)
 # Загрузка конфига
 def getConfig (path):
     try:
@@ -124,7 +124,10 @@ signal.signal(signal.SIGINT, signal_handler)
 #sensitivity = [SENSITIVITY1]*len(models) #уровень распознования, чем больше значение, тем больше ложных срабатываней
 sensitivity = [SENSITIVITY1] #уровень распознования, чем больше значение, тем больше ложных срабатываней
 detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
-callbacks = [detected, detected]
+#callbacks = [detected, detected]
+callbacks = []
+for l in models:
+    callbacks.append("detected")
 # main loop
 # make sure you have the same numbers of callbacks and models
 print('Слушаю... Нажмите Ctrl+C для выхода')
