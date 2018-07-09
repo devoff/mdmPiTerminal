@@ -41,3 +41,6 @@ callbacks = []
 for i in models:
     callbacks.append("detected")
 print callbacks
+
+
+os.system("sudo service mdmpiterminal restart; sudo service mdmpiterminalsayreply restart")
