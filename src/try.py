@@ -1,12 +1,13 @@
+# Импорт
 import sys
-
+# Читаем аргумент
 if len(sys.argv) == 1:
-    print("Error: need to specify model name")
-    print("Usage: python demo.py your.model")
+    print("Error: need to specify text")
+    print("Usage: python try.py text")
     sys.exit(-1)
-
+# Присваем аргумент переменной
 text = sys.argv[1]
-
+# Разбираем аргумент на куски
 param = text.split("_")
 a = param[0]
 b = param[1]
