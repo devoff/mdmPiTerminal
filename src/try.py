@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # Импорт
 import sys
+import os
 # Читаем аргумент
 if len(sys.argv) == 1:
     print("Error: need to specify text")
@@ -23,3 +24,15 @@ elif a == "play":
 
 elif a == "compile":
     print ("/resources/training_service.sh /tmp/"+b+"/1.wav /tmp/"+b+"/2.wav /tmp/"+b+"/3.wav convert to /resources/model"+b+".pmdl")
+
+
+c = []
+root_dir = './resources'
+
+for files in os.walk(root_dir):
+    for file in files:
+        a = os.path.join(file)
+for b in a:
+    c.append("/resources/"+b)
+
+print c

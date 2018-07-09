@@ -16,8 +16,8 @@ import fcntl
 import struct
 ##### Настройки #####
 #Название файлов модели.
-model1 = 'model1.pmdl'
-model2 = 'model2.pmdl'
+#model1 = 'model1.pmdl'
+#model2 = 'model2.pmdl'
 #Путь к файлу конфигурации
 home = os.path.abspath(os.path.dirname(__file__))
 path = home+'/settings.ini'
@@ -26,7 +26,14 @@ config = configparser.ConfigParser()
 subprocess.Popen(["aplay", home+"/snd/Startup.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 interrupted = False
 #Ссылки на голосовые модели
-models = [home+'/resources/'+model1, home+'/resources/'+model2]
+#models = [home+'/resources/'+model1, home+'/resources/'+model2]
+models = []
+root_dir = home+'/resources'
+for files in os.walk(root_dir):
+    for file in files:
+        j = os.path.join(file)
+for m in j:
+    models.append("/resources/"+m)
 # Загрузка конфига
 def getConfig (path):
     try:
