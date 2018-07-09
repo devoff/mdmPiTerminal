@@ -18,6 +18,7 @@ import urllib.request
 #Путь к файлу конфигурации
 home = os.path.abspath(os.path.dirname(__file__))
 path = home+'/settings.ini'
+busy = os.system("ps aux|grep 'aplay'|grep -v grep |awk '{print $2}'")
 #Распознавание речи
 def detected():
    try:
