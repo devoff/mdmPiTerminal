@@ -116,8 +116,8 @@ def parse(conn, addr):# обработка соединения в отдель�
         elif a == "compile":
            say ("Отправляю модель на обработку");
            try:
-               os.system(home+"/resources/training_service.sh /tmp/"+b+"/1.wav /tmp/"+b+"/2.wav /tmp/"+b+"/3.wav convert to /resources/model"+b+".pmdl")
-               print (home+"/resources/training_service.sh /tmp/"+b+"/1.wav /tmp/"+b+"/2.wav /tmp/"+b+"/3.wav convert to /resources/model"+b+".pmdl")
+               os.system(home+"/resources/training_service.sh /tmp/"+b+"/1.wav /tmp/"+b+"/2.wav /tmp/"+b+"/3.wav convert to /resources/models/model"+b+".pmdl")
+               print (home+"/resources/training_service.sh /tmp/"+b+"/1.wav /tmp/"+b+"/2.wav /tmp/"+b+"/3.wav convert to /resources/models/model"+b+".pmdl")
                say ("Модель голоса создана успешно");
            except:
                say ("Произошла ошибка при отправке");
