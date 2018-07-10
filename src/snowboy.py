@@ -16,8 +16,8 @@ import fcntl
 import struct
 ##### Настройки #####
 #Название файлов модели.
-model1 = 'model1.pmdl'
-model2 = 'model2.pmdl'
+#model1 = 'model1.pmdl'
+#model2 = 'model2.pmdl'
 #Путь к файлу конфигурации
 home = os.path.abspath(os.path.dirname(__file__))
 path = home+'/settings.ini'
@@ -26,7 +26,12 @@ config = configparser.ConfigParser()
 subprocess.Popen(["aplay", home+"/snd/Startup.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 interrupted = False
 #Ссылки на голосовые модели
-models = [home+'/resources/'+model1, home+'/resources/'+model2]
+#models = [home+'/resources/'+model1, home+'/resources/'+model2]
+models = []
+root_dir = home+'/resources/models/'
+for files in os.walk(root_dir):
+    for m in files[2]:
+        models.append(home+"/resources/models/"+m)
 # Загрузка конфига
 def getConfig (path):
     try:
@@ -117,7 +122,10 @@ signal.signal(signal.SIGINT, signal_handler)
 #sensitivity = [SENSITIVITY1]*len(models) #уровень распознования, чем больше значение, тем больше ложных срабатываней
 sensitivity = [SENSITIVITY1] #уровень распознования, чем больше значение, тем больше ложных срабатываней
 detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
-callbacks = [detected, detected]
+#callbacks = [detected, detected]
+callbacks = []
+for l in models:
+    callbacks.append("detected")
 # main loop
 # make sure you have the same numbers of callbacks and models
 print('Слушаю... Нажмите Ctrl+C для выхода')

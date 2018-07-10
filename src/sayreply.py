@@ -18,6 +18,7 @@ import urllib.request
 #Путь к файлу конфигурации
 home = os.path.abspath(os.path.dirname(__file__))
 path = home+'/settings.ini'
+busy = os.system("ps aux|grep 'aplay'|grep -v grep |awk '{print $2}'")
 #Распознавание речи
 def detected():
    try:
@@ -95,49 +96,39 @@ def parse(conn, addr):# обработка соединения в отдель�
            config.write(config_file)
        getConfig (path)
     if method == 'rec' :
-        if text == "rec1_1":
+        param = text.split("_") # должно быть вида rec_1_1, play_2_1, compile_5_1
+        a = param[0] # rec, play или compile
+        b = param[1] # 1-6
+        c = param[2] # 1-3
+        if a == "rec":
            say ("Запись на 5 секунд начнется после голосового сигнала")
-       #os.system("rec -r 16000 -c 1 -b 16 -e signed-integer /tmp/1.wav")
            try:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
-               subprocess.call(["rec", "/tmp/1.wav"], timeout = 5)
+               subprocess.call(["rec", "/tmp/"+b+c+".wav"], timeout = 5)
            except subprocess.TimeoutExpired:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
-               say ("Запись первого файла завершена")
-        elif text == "rec1_2":
-           try:
-               subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-               sleep(0.3)
-               subprocess.call(["rec", "/tmp/2.wav"], timeout = 5)
-           except subprocess.TimeoutExpired:
-               subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-               sleep(0.3)
-               say ("Запись второго файла завершена")
-        elif text == "rec1_3":
-           try:
-               subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-               sleep(0.3)
-               subprocess.call(["rec", "/tmp/3.wav"], timeout = 5)
-           except subprocess.TimeoutExpired:
-               subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-               sleep(0.3)
-               say ("Запись третьего файла завершена")
-        elif text == "play1_1":
-           os.system("aplay /tmp/1.wav")
-        elif text == "play1_2":
-           os.system("aplay /tmp/2.wav")
-        elif text == "play1_3":
-           os.system("aplay /tmp/3.wav")
-        elif text == "compile1":
+               say ("Запись файла завершена")
+
+        elif a == "play":
+           os.system("aplay /tmp/"+b+c+".wav")
+
+        elif a == "compile":
            say ("Отправляю модель на обработку");
            try:
-               os.system(home+"/resources/training_service.sh /tmp/1.wav /tmp/2.wav /tmp/3.wav "+home+"/resources/model1.pmdl")
-               print (home+"/resources/training_service.sh /tmp/1.wav /tmp/2.wav /tmp/3.wav "+home+"/resources/model1.pmdl")
+               os.system(home+"/resources/training_service.sh /tmp/"+b+"1.wav /tmp/"+b+"2.wav /tmp/"+b+"3.wav "+home+"/resources/models/model"+b+".pmdl")
+               print (home+"/resources/training_service.sh /tmp/"+b+"1.wav /tmp/"+b+"2.wav /tmp/"+b+"3.wav convert to /resources/models/model"+b+".pmdl")
                say ("Модель голоса создана успешно");
            except:
                say ("Произошла ошибка при отправке");
+        elif a == "save":
+            say ("Идет подготовка к перезагрузке");
+            sleep(0.3)
+            try:
+                os.system("sudo service mdmpiterminal restart; sudo service mdmpiterminalsayreply restart")
+            except:
+                say ("Что-то пошло не так");
 #Получаем конфиг
 def getConfig (path):
     try:
@@ -171,6 +162,7 @@ def get_ip_address():
 getConfig (path)
 if FIRSTBOOT == "1":
     ip = (get_ip_address())
+    sleep (2.0)
     say ("Это первая загрузка терминала, мой IP адрес: "+ip)
 #    config.set("Boot", "firstboot", "0" )
 #    with open(path, "w") as config_file:
