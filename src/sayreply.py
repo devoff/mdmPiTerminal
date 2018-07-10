@@ -105,20 +105,20 @@ def parse(conn, addr):# обработка соединения в отдель�
            try:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
-               subprocess.call(["rec", "/tmp/"+b+"/"+c+".wav"], timeout = 5)
+               subprocess.call(["rec", "/tmp/"+b+c+".wav"], timeout = 5)
            except subprocess.TimeoutExpired:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                say ("Запись файла завершена")
 
         elif a == "play":
-           os.system("aplay /tmp/"+b+"/"+c+".wav")
+           os.system("aplay /tmp/"+b+c+".wav")
 
         elif a == "compile":
            say ("Отправляю модель на обработку");
            try:
-               os.system(home+"/resources/training_service.sh /tmp/"+b+"/1.wav /tmp/"+b+"/2.wav /tmp/"+b+"/3.wav "+home+"/resources/models/model"+b+".pmdl")
-               print (home+"/resources/training_service.sh /tmp/"+b+"/1.wav /tmp/"+b+"/2.wav /tmp/"+b+"/3.wav convert to /resources/models/model"+b+".pmdl")
+               os.system(home+"/resources/training_service.sh /tmp/"+b+"1.wav /tmp/"+b+"2.wav /tmp/"+b+"3.wav "+home+"/resources/models/model"+b+".pmdl")
+               print (home+"/resources/training_service.sh /tmp/"+b+"1.wav /tmp/"+b+"2.wav /tmp/"+b+"3.wav convert to /resources/models/model"+b+".pmdl")
                say ("Модель голоса создана успешно");
            except:
                say ("Произошла ошибка при отправке");
