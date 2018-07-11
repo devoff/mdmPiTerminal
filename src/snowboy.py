@@ -125,7 +125,7 @@ detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
 #callbacks = [detected, detected]
 callbacks = []
 for l in models:
-    callbacks.append("detected")
+    callbacks.append(detected)
 # main loop
 # make sure you have the same numbers of callbacks and models
 print('Слушаю... Нажмите Ctrl+C для выхода')
