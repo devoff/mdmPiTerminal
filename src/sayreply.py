@@ -23,6 +23,7 @@ busy = os.system("ps aux|grep 'aplay'|grep -v grep |awk '{print $2}'")
 def detected():
    try:
        getConfig (path)
+       os.system("sudo service mdmpiterminal stop")
        if ALARMKWACTIVATED == "1":
            subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
        index = pyaudio.PyAudio().get_device_count() - 1
@@ -46,15 +47,19 @@ def detected():
                subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
            link="http://"+IP_SERVER+'/command.php?qry=' + urllib.parse.quote_plus(command)
            f=urllib.request.urlopen(link)
+       os.system("sudo service mdmpiterminal start")
    except  sr.UnknownValueError as e:
            print("Произошла ошибка  {0}".format(e))
 		   #detected ()
+           os.system("sudo service mdmpiterminal start")
    except sr.RequestError as e:
            print("Произошла ошибка  {0}".format(e))
            say ("Произошла ошибка  {0}".format(e))
+           os.system("sudo service mdmpiterminal start")
    except sr.WaitTimeoutError:
            print ("Я ничего не услышала")
            say ("Я ничего не услышала")
+           os.system("sudo service mdmpiterminal start")
 #Соккет
 def parse(conn, addr):# обработка соединения в отдельной функции
     data = b""
@@ -103,6 +108,7 @@ def parse(conn, addr):# обработка соединения в отдель�
         b = param[1] # 1-6
         c = param[2] # 1-3
         if a == "rec":
+           os.system("sudo service mdmpiterminal stop")
            say ("Запись на 5 секунд начнется после голосового сигнала")
            try:
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -112,7 +118,7 @@ def parse(conn, addr):# обработка соединения в отдель�
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                say ("Запись файла завершена")
-
+           os.system("sudo service mdmpiterminal start")
         elif a == "play":
            os.system("aplay /tmp/"+b+c+".wav")
 
