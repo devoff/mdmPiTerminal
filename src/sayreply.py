@@ -115,7 +115,7 @@ def parse(conn, addr):# обработка соединения в отдель�
                subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                sleep(0.3)
                say ("Запись файла завершена")
-           os.system("sudo service mdmpiterminal start")
+               os.system("sudo service mdmpiterminal start")
         elif a == "play":
            os.system("aplay /tmp/"+b+c+".wav")
 
