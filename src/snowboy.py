@@ -23,7 +23,7 @@ home = os.path.abspath(os.path.dirname(__file__))
 path = home+'/settings.ini'
 config = configparser.ConfigParser()
 #Приветствие
-subprocess.Popen(["aplay", home+"/snd/Startup.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#subprocess.Popen(["aplay", home+"/snd/Startup.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 interrupted = False
 #Ссылки на голосовые модели
 #models = [home+'/resources/'+model1, home+'/resources/'+model2]
