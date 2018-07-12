@@ -78,6 +78,8 @@ def parse(conn, addr):# обработка соединения в отдель�
        sleep(0.5)
        say (text)
     if method == 'ask' :
+       say(text)
+       sleep(0.2)
        detected()
     if method == 'settings' :
        settings = text
