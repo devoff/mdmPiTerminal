@@ -131,7 +131,7 @@ def parse(conn, addr):# обработка соединения в отдель�
             say ("Идет подготовка к перезагрузке");
             sleep(0.3)
             try:
-                os.system("sudo service mdmpiterminal restart; sudo service mdmpiterminalsayreply restart")
+                os.system("sudo service mdmpiterminal restart")
             except:
                 say ("Что-то пошло не так");
 #Получаем конфиг
