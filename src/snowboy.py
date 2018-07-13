@@ -31,7 +31,7 @@ models = []
 root_dir = home+'/resources/models/'
 for files in os.walk(root_dir):
     for m in files[2]:
-        models.append(home+"/resources/models/"+m)
+        models.append(home+'/resources/models/'+m)
 # Загрузка конфига
 def getConfig (path):
     try:
