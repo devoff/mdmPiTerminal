@@ -132,6 +132,7 @@ def parse(conn, addr):# обработка соединения в отдель�
             sleep(0.3)
             try:
                 os.system("sudo service mdmpiterminal restart")
+                say ("Готово")
             except:
                 say ("Что-то пошло не так");
 #Получаем конфиг
