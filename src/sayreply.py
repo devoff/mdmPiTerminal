@@ -80,7 +80,7 @@ def parse(conn, addr):# обработка соединения в отдель�
     if method == 'ask' :
        os.system("sudo service mdmpiterminal stop")
        say(text)
-       sleep(0.2)
+       #sleep(0.2)
        detected()
        os.system("sudo service mdmpiterminal start")
     if method == 'settings' :
@@ -159,7 +159,7 @@ def getConfig (path):
         print ("Конфигурация загружена")
     except:
         print ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
-#Нзнаем IP адрес
+#Узнаем IP адрес
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
@@ -170,6 +170,8 @@ if FIRSTBOOT == "1":
     ip = (get_ip_address())
     sleep (2.0)
     say ("Это первая загрузка терминала, мой IP адрес: "+ip)
+elif FIRSTBOOT == "0":
+    say ("Терминал готов к работе")
 #    config.set("Boot", "firstboot", "0" )
 #    with open(path, "w") as config_file:
 #        config.write(config_file)

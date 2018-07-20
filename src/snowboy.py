@@ -35,7 +35,7 @@ for files in os.walk(root_dir):
 # Загрузка конфига
 def getConfig (path):
     try:
-        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY1, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER, FIRSTBOOT
+        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER, FIRSTBOOT
         config.read(path)
         #ID = config.get("Settings", "ID") #номер терминала
         #TITLE = config.get("Settings", "TITLE") #навазние терминала
@@ -46,7 +46,7 @@ def getConfig (path):
         APIKEYTTS = config.get("Settings", "APIKEYTTS") #Ключ API сервиса синтеза речи:
         PROVIDERSTT = config.get("Settings", "PROVIDERSTT") #Сервис распознования речи
         APIKEYSTT = config.get("Settings", "APIKEYSTT") #Ключ API сервиса распознования речи:
-        SENSITIVITY1 = config.get("Settings", "SENSITIVITY") #Чувствительность реагирования на ключевое слово
+        SENSITIVITY = config.get("Settings", "SENSITIVITY") #Чувствительность реагирования на ключевое слово
         ALARMKWACTIVATED = config.get("Settings", "ALARMKWACTIVATED") #Сигнал о распозновании ключевого слова
         ALARMTTS = config.get("Settings", "ALARMTTS") #Сигнал перед сообщением
         ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
@@ -71,7 +71,7 @@ def detected():
         #snowboydecoder.play_audio_file(snowboydecoder.DETECT_DING)
         if ALARMKWACTIVATED == "1":
             subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            print (SENSITIVITY1)
+            print (SENSITIVITY)
         index = pyaudio.PyAudio().get_device_count() - 1
         print (index)
         with sr.Microphone() as source:
@@ -120,7 +120,7 @@ getConfig (path)
 #capture SIGINT signal, e.g., Ctrl+C
 signal.signal(signal.SIGINT, signal_handler)
 #sensitivity = [SENSITIVITY1]*len(models) #уровень распознования, чем больше значение, тем больше ложных срабатываней
-sensitivity = [SENSITIVITY1] #уровень распознования, чем больше значение, тем больше ложных срабатываней
+sensitivity = [SENSITIVITY] #уровень распознования, чем больше значение, тем больше ложных срабатываней
 detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
 #callbacks = [detected, detected]
 callbacks = []
