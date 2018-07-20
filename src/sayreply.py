@@ -29,8 +29,8 @@ def detected():
        print (index)
        r = sr.Recognizer()
        with sr.Microphone(index) as source:
-           #r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать.
-           audio = r.listen(source, timeout = 10)
+           r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать.
+           audio = r.listen(source, timeout = 10, phrase_time_limit=15)
            if ALARMTTS == "1":
                subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
            #snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
