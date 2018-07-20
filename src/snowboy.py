@@ -16,21 +16,26 @@ import fcntl
 import struct
 ##### Настройки #####
 #Название файлов модели.
-model1 = 'model1.pmdl'
-model2 = 'model2.pmdl'
+#model1 = 'model1.pmdl'
+#model2 = 'model2.pmdl'
 #Путь к файлу конфигурации
 home = os.path.abspath(os.path.dirname(__file__))
 path = home+'/settings.ini'
 config = configparser.ConfigParser()
 #Приветствие
-subprocess.Popen(["aplay", home+"/snd/Startup.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#subprocess.Popen(["aplay", home+"/snd/Startup.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 interrupted = False
 #Ссылки на голосовые модели
-models = [home+'/resources/'+model1, home+'/resources/'+model2]
+#models = [home+'/resources/'+model1, home+'/resources/'+model2]
+models = []
+root_dir = home+'/resources/models/'
+for files in os.walk(root_dir):
+    for m in files[2]:
+        models.append(home+'/resources/models/'+m)
 # Загрузка конфига
 def getConfig (path):
     try:
-        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY1, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER, FIRSTBOOT
+        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER, FIRSTBOOT
         config.read(path)
         #ID = config.get("Settings", "ID") #номер терминала
         #TITLE = config.get("Settings", "TITLE") #навазние терминала
@@ -41,7 +46,7 @@ def getConfig (path):
         APIKEYTTS = config.get("Settings", "APIKEYTTS") #Ключ API сервиса синтеза речи:
         PROVIDERSTT = config.get("Settings", "PROVIDERSTT") #Сервис распознования речи
         APIKEYSTT = config.get("Settings", "APIKEYSTT") #Ключ API сервиса распознования речи:
-        SENSITIVITY1 = config.get("Settings", "SENSITIVITY") #Чувствительность реагирования на ключевое слово
+        SENSITIVITY = config.get("Settings", "SENSITIVITY") #Чувствительность реагирования на ключевое слово
         ALARMKWACTIVATED = config.get("Settings", "ALARMKWACTIVATED") #Сигнал о распозновании ключевого слова
         ALARMTTS = config.get("Settings", "ALARMTTS") #Сигнал перед сообщением
         ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
@@ -66,15 +71,15 @@ def detected():
         #snowboydecoder.play_audio_file(snowboydecoder.DETECT_DING)
         if ALARMKWACTIVATED == "1":
             subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            print (SENSITIVITY1)
+            print (SENSITIVITY)
         index = pyaudio.PyAudio().get_device_count() - 1
         print (index)
         with sr.Microphone() as source:
             r = sr.Recognizer()
-            #r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать.
+            r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать.
             random_item = random.SystemRandom().choice(["Привет", "Слушаю", "На связи", "Привет-Привет"])
             say (random_item)
-            audio = r.listen(source, timeout = 10)
+            audio = r.listen(source, timeout = 10, phrase_time_limit=15)
             if ALARMTTS == "1":
                 subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             #snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
@@ -115,9 +120,12 @@ getConfig (path)
 #capture SIGINT signal, e.g., Ctrl+C
 signal.signal(signal.SIGINT, signal_handler)
 #sensitivity = [SENSITIVITY1]*len(models) #уровень распознования, чем больше значение, тем больше ложных срабатываней
-sensitivity = [SENSITIVITY1] #уровень распознования, чем больше значение, тем больше ложных срабатываней
+sensitivity = [SENSITIVITY] #уровень распознования, чем больше значение, тем больше ложных срабатываней
 detector = snowboydecoder.HotwordDetector(models, sensitivity=sensitivity)
-callbacks = [detected, detected]
+#callbacks = [detected, detected]
+callbacks = []
+for l in models:
+    callbacks.append(detected)
 # main loop
 # make sure you have the same numbers of callbacks and models
 print('Слушаю... Нажмите Ctrl+C для выхода')

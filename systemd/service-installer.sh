@@ -1,6 +1,19 @@
 #!/bin/bash
 
-
+echo
+while read -p $'Please select device type you want to configure:\n 1 - USB microphone\n 2 - OPi built-in microphone\n 3 - PS3 eye\nDevice type selected: ' DEVICETYPE ; do
+  if [[ $DEVICETYPE == 1 ]]; then
+    sudo cp systemd/asound_usb.conf /etc/asound.conf
+  elif [[ `echo $DEVICETYPE` == 2 ]]; then
+    sudo cp systemd/asound_pi.conf /etc/asound.conf
+  elif [[ `echo $DEVICETYPE` == 3 ]]; then
+    sudo cp systemd/asound_eye.conf /etc/asound.conf
+  else
+    echo
+    echo 'Wrong device type selected.'
+    echo
+  fi
+done
 
 cp /dev/null mdmpiterminal.service
 

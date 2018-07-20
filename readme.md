@@ -9,23 +9,23 @@
 На данный момент протестировано на платах:
 * ***Orange Pi Zero*** - Armbian Ubuntu_xenial_default ***ядро 3.4***
 
-## Подготовка 
+## Подготовка
 * Скачать и записать [образ системы](https://dl.armbian.com/orangepizero/Ubuntu_xenial_default.7z).
 * Дождаться обновление всех пакетов (проверить можно через команду htop, будет запущен процесс dkpg)
 * Отредактировать или создать файл /etc/asound.conf
 
-Заранее проверить на каком усройстве микрофон и динмаик через команду 
+Заранее проверить на каком усройстве микрофон и динмаик через команду
 ```
-aplay -l 
+aplay -l
 arecord -l
 ```
-и отредактировать если нужно hw:2,0 
+и отредактировать если нужно hw:2,0
 
 ```
 sudo nano /etc/asound.conf
 
 ```
-Вставить код 
+Вставить код
 
 ```
 pcm.!default {
@@ -65,7 +65,7 @@ ipc_key 666666
 speaker-test
 ```
 
-## Установка 
+## Установка
 ***
 1. Откройте терминал и выполните команды
 ```
@@ -75,9 +75,9 @@ cd mdmPiTerminal
 chmod +x scripts/mdm-pi-installer.sh
 ./scripts/mdm-pi-installer.sh
 ```
-Ждем пока установится SnowBoy и все зависимости. 
+Ждем пока установится SnowBoy и все зависимости.
 
-## Первый запуск, подготовка терминала 
+## Первый запуск, подготовка терминала
 ***
 ```
 chmod +x systemd/service-installer.sh
@@ -86,13 +86,13 @@ sudo ./systemd/service-installer.sh
 sudo systemctl enable mdmpiterminal.service
 sudo systemctl enable mdmpiterminalsayreply.service
 
-sudo systemctl start mdmpiterminalsayreply.service 
+sudo systemctl start mdmpiterminalsayreply.service
 ```
 
-## Настройка терминала 
+## Настройка терминала
 ***
-* Заходим в Панель управления MajorDomo > Система > Маркет дополнений > Оборудование > MDM VoiceAssistant и устанавливаем модуль. 
-* После заходим - в Настройки > Терминалы > Добавить новую запись > Добавляем название и IP адрес терминала 
+* Заходим в Панель управления MajorDomo > Система > Маркет дополнений > Оборудование > MDM VoiceAssistant и устанавливаем модуль.
+* После заходим - в Настройки > Терминалы > Добавить новую запись > Добавляем название и IP адрес терминала
 * Переходим в Устройства >  MDM VoiceAssistant
 * Выбираем терминал, который только, что создали.
 * Выбираем Сервис синтеза речи
@@ -106,7 +106,7 @@ sudo systemctl start mdmpiterminalsayreply.service
 ***Можно выбрать wit.ai или микрософт, но для них нужно получить API***
 * Сохраняем
 
-## Запись ключевого слова 
+## Запись ключевого слова
 ***
 ***Я бы рекомендовал записать образцы голоса сразу на терминале с тем микрофоном, который будет использоваться.***
 * В МДМ в настройках модуля, во вкладка запись ключевого слово нажимаем - ЗАПИСЬ
@@ -118,21 +118,30 @@ sudo systemctl start mdmpiterminalsayreply.service
 * Зписать ключевое слово
 * Скачать файл в формате pmdl
 * Переименовать файл в model1.pmdl
-* Перезаписать файл в папке 
+* Перезаписать файл в папке
 ```
 mdmPiTerminal/src/resources/
 ```
 
-## Запуск терминала 
+## Запуск терминала
 ***
 ```
 sudo systemctl start mdmpiterminal.service
 ```
 
-## Отладка 
+## Отладка
 ***
+***Получить отладочную информацию***
+
+```
+watch service mdmpiterminalsayreply status
+```
+или
+```
+watch service mdmpiterminal status
+```
 ***Для ручного запуска скриптом терминала***
-* Остановить сервисы 
+* Остановить сервисы
 ```
 sudo service mdmpiterminal stop
 sudo service mdmpiterminalsayreply stop
@@ -140,10 +149,10 @@ sudo service mdmpiterminalsayreply stop
 * Запустить требуемое
 ```
 cd ~/
-mdmPiTerminal/env/bin/python -u mdmPiTerminal/src/snowboy.py // для запуская сервиса распознования ключевого слова 
-mdmPiTerminal/env/bin/python -u mdmPiTerminal/src/sayreply.py // Сервис для ответов от МДМ получение и обработка настроек. 
+sudo mdmPiTerminal/env/bin/python -u mdmPiTerminal/src/snowboy.py // для запуская сервиса распознования ключевого слова
+sudo mdmPiTerminal/env/bin/python -u mdmPiTerminal/src/sayreply.py // Сервис для ответов от МДМ получение и обработка настроек.
 ```
 
-## Решения проблем 
+## Решения проблем
 ***
-* Если не работает USB микрофон, попробуйте выдыренуть и вставить обратно, иногда это помогает. 
+* Если не работает USB микрофон, попробуйте выдыренуть и вставить обратно, иногда это помогает.
