@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo cp systemd/010_services /etc/sudoers.d/
+
 echo
 while read -p $'Please select device type you want to configure:\n 1 - USB microphone\n 2 - OPi built-in microphone\n 3 - PS3 eye\nDevice type selected: ' DEVICETYPE ; do
   if [[ $DEVICETYPE == 1 ]]; then
