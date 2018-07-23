@@ -27,7 +27,7 @@ def detected():
            subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
        index = pyaudio.PyAudio().get_device_count() - 1
        print (index)
-       with sr.Microphone(index) as source:
+       with sr.Microphone() as source:
            r = sr.Recognizer()
            r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать.
            audio = r.listen(source, timeout = 10, phrase_time_limit=15)
