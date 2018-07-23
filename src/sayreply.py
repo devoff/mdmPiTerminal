@@ -159,7 +159,6 @@ def get_ip_address():
 getConfig (path)
 if FIRSTBOOT == "1":
     ip = (get_ip_address())
-    sleep (2.0)
     say ("Это первая загрузка терминала, мой IP адрес: "+ip)
 elif FIRSTBOOT == "0":
     say ("Терминал готов к работе")
