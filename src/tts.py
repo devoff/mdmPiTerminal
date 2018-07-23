@@ -60,7 +60,7 @@ def say(words):
 
 def getConfig (path):
     try:
-        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP
+        global PROVIDERTTS, APIKEYTTS
         config = configparser.ConfigParser()
         config.read(path)
         PROVIDERTTS = config.get("Settings", "PROVIDERTTS") # Сервис синтеза речи
