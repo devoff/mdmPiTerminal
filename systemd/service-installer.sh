@@ -1,23 +1,5 @@
 #!/bin/bash
 
-sudo cp systemd/010_services /etc/sudoers.d/
-
-echo
-read -p $'Please select device type you want to configure:\n 1 - USB microphone\n 2 - OPi built-in microphone\n 3 - PS3 eye\nDevice type selected: ' DEVICETYPE ;
-if [[ $DEVICETYPE == 1 ]]; then
-  sudo cp systemd/asound_usb.conf /etc/asound.conf
-elif [[ `echo $DEVICETYPE` == 2 ]]; then
-  sudo cp systemd/asound_pi.conf /etc/asound.conf
-elif [[ `echo $DEVICETYPE` == 3 ]]; then
-  sudo cp systemd/asound_eye.conf /etc/asound.conf
-else
-  echo
-  echo 'Wrong device type selected.'
-  echo
-  exit 1
-fi
-
-
 cp /dev/null mdmpiterminal.service
 
 user="$(whoami)"
