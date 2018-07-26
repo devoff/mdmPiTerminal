@@ -134,14 +134,14 @@ def parse(conn, addr):# обработка соединения в отдель�
 
 def getConfig (path):
     try:
-        global PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP_SERVER, FIRSTBOOT
+        global PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP_SERVER, FIRSTBOOT
         config = configparser.ConfigParser()
         config.read(path)
         PROVIDERTTS = config.get("Settings", "PROVIDERTTS") # Сервис синтеза речи
         APIKEYTTS = config.get("Settings", "APIKEYTTS") #Ключ API сервиса синтеза речи:
         PROVIDERSTT = config.get("Settings", "PROVIDERSTT") #Сервис распознования речи
         APIKEYSTT = config.get("Settings", "APIKEYSTT") #Ключ API сервиса распознования речи:
-        SENSITIVITY = config.get("Settings", "SENSITIVITY") #Чувствительность реагирования на ключевое слово
+        #SENSITIVITY = config.get("Settings", "SENSITIVITY") #Чувствительность реагирования на ключевое слово
         ALARMKWACTIVATED = config.get("Settings", "ALARMKWACTIVATED") #Сигнал о распозновании ключевого слова
         ALARMTTS = config.get("Settings", "ALARMTTS") #Сигнал перед сообщением
         ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
@@ -149,8 +149,9 @@ def getConfig (path):
         FIRSTBOOT = config.get("Boot", "firstboot")
         print ("Конфигурация загружена")
     except:
-        print ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
-
+        say ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
+        sys.exit(0)
+        
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))

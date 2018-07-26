@@ -10,7 +10,11 @@
 * ***Orange Pi Zero*** - Armbian Ubuntu_xenial_default ***ядро 3.4***
 
 ## Подготовка
-* Скачать и записать [образ системы](https://dl.armbian.com/orangepizero/Ubuntu_xenial_default.7z).
+* Скачать и записать [образ системы](https://drive.google.com/open?id=1WC-yjoAxmPtGctpUm-CAkN7VNFI7ouC3).
+```
+login: pi
+password: qwertyui
+``` 
 * Дождаться обновление всех пакетов (проверить можно через команду htop, будет запущен процесс dkpg)
 * Отредактировать или создать файл /etc/asound.conf
 

@@ -40,6 +40,7 @@ def getConfig (path):
         print ("Конфигурация загружена")
     except:
         say ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
+        sys.exit(0)
 
 def signal_handler(signal, frame):
     global interrupted
