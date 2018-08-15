@@ -133,7 +133,7 @@ sudo systemctl start mdmpiterminalsayreply.service
 * Переименовать файл в model1.pmdl
 * Перезаписать файл в папке
 ```
-mdmPiTerminal/src/resources/
+mdmPiTerminal/src/resources/models/
 ```
 
 ## Запуск терминала
