@@ -12,7 +12,7 @@ home = os.path.abspath(os.path.dirname(__file__))
 path = home+'/settings.ini'
 
 words = '1'
-ttsfilename=home+"/snd/" + words + ".wav"
+ttsfilename=home+"/snd/cache/" + words + ".wav"
 translator = Translator()
 language='ru-RU'
 languageG='ru'
@@ -27,13 +27,13 @@ def say(words):
     getConfig (path)
     md5 = hashlib.sha1(words.encode('utf-8')).hexdigest()
     filemp3 = ""
-    for file in os.listdir(home+"/snd/"):
+    for file in os.listdir(home+"/snd/cache/"):
         if file.endswith(md5+".wav"):
           filemp3 = (os.path.join(file))
 
     if filemp3 == md5+".wav":
       print ("Файл уже записан")
-      os.system("aplay -q "+home+"/snd/"+ filemp3)
+      os.system("aplay -q "+home+"/snd/cache/"+ filemp3)
     elif filemp3 == md5+".mp3":
       print ("Файл уже записан")
       s.system("mpg123 -q "+filemp3)
@@ -44,7 +44,7 @@ def say(words):
       tts = TTS("alyss", "wav", APIKEYTTS, lang=language,emotion="good")
       tts.generate(words)
       words = hashlib.sha1(words.encode('utf-8')).hexdigest()
-      ttsfilename=home+"/snd/" + words + ".wav"
+      ttsfilename=home+"/snd/cache/" + words + ".wav"
       tts.save(ttsfilename)
       os.system("aplay -q "+ttsfilename)
       #os.remove(ttsfilename)
@@ -53,14 +53,14 @@ def say(words):
       print ("Генерируем файл")
       tts = gTTS(text=words, lang=languageG)
       words = hashlib.sha1(words.encode('utf-8')).hexdigest()
-      ttsfilename=home+"/snd/" + words + ".mp3"
+      ttsfilename=home+"/snd/cache/" + words + ".mp3"
       tts.save(ttsfilename)
       os.system("mpg123 -q "+ttsfilename)
       #os.remove(ttsfilename)
 
 def getConfig (path):
     try:
-        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP
+        global PROVIDERTTS, APIKEYTTS
         config = configparser.ConfigParser()
         config.read(path)
         PROVIDERTTS = config.get("Settings", "PROVIDERTTS") # Сервис синтеза речи

@@ -15,25 +15,24 @@ from time import sleep
 import fcntl
 import struct
 import urllib.request
-#Путь к файлу конфигурации
+
 home = os.path.abspath(os.path.dirname(__file__))
 path = home+'/settings.ini'
-busy = os.system("ps aux|grep 'aplay'|grep -v grep |awk '{print $2}'")
-#Распознавание речи
+#busy = os.system("ps aux|grep 'aplay'|grep -v grep |awk '{print $2}'")
+
 def detected():
    try:
        getConfig (path)
        if ALARMKWACTIVATED == "1":
            subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-       index = pyaudio.PyAudio().get_device_count() - 1
-       print (index)
-       r = sr.Recognizer()
-       with sr.Microphone(index) as source:
+       #index = pyaudio.PyAudio().get_device_count() - 1
+       #print (index)
+       with sr.Microphone() as source:
+           r = sr.Recognizer()
            r.adjust_for_ambient_noise(source) # Слушаем шум 1 секунду, потом распознаем, если раздажает задержка можно закомментировать.
            audio = r.listen(source, timeout = 10, phrase_time_limit=15)
            if ALARMTTS == "1":
                subprocess.Popen(["aplay", home+"/snd/dong.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-           #snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
            print("Processing ... Для распознования используем "+PROVIDERSTT)
            if PROVIDERSTT == "Google":
                command=r.recognize_google(audio, language="ru-RU")
@@ -48,20 +47,18 @@ def detected():
            f=urllib.request.urlopen(link)
    except  sr.UnknownValueError as e:
            print("Произошла ошибка  {0}".format(e))
-		   #detected ()
    except sr.RequestError as e:
            print("Произошла ошибка  {0}".format(e))
            say ("Произошла ошибка  {0}".format(e))
    except sr.WaitTimeoutError:
            print ("Я ничего не услышала")
            say ("Я ничего не услышала")
-#Соккет
+
 def parse(conn, addr):# обработка соединения в отдельной функции
     data = b""
     while not b"\r\n" in data: # ждём первую строку
         tmp = conn.recv(1024)
         if not tmp:   # сокет закрыли, пустой объект
-            #print ("tmp error")
             break
         else:
             data += tmp
@@ -80,7 +77,6 @@ def parse(conn, addr):# обработка соединения в отдель�
     if method == 'ask' :
        os.system("sudo service mdmpiterminal stop")
        say(text)
-       #sleep(0.2)
        detected()
        os.system("sudo service mdmpiterminal start")
     if method == 'settings' :
@@ -135,22 +131,17 @@ def parse(conn, addr):# обработка соединения в отдель�
                 say ("Готово")
             except:
                 say ("Что-то пошло не так");
-#Получаем конфиг
+
 def getConfig (path):
     try:
-        global ID, TITLE, NAME, LINKEDROOM, PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, SENSITIVITY, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP, IP_SERVER, FIRSTBOOT
+        global PROVIDERTTS, APIKEYTTS, PROVIDERSTT, APIKEYSTT, ALARMKWACTIVATED, ALARMTTS, ALARMSTT, IP_SERVER, FIRSTBOOT
         config = configparser.ConfigParser()
         config.read(path)
-        #ID = config.get("Settings", "ID") #номер терминала
-        #TITLE = config.get("Settings", "TITLE") #навазние терминала
-        #NAME = config.get("Settings", "NAME") #Системное имя
-        #LINKEDROOM = config.get("Settings", "LINKEDROOM") #Расположение
-        #IP = config.get("Settings", "IP")
         PROVIDERTTS = config.get("Settings", "PROVIDERTTS") # Сервис синтеза речи
         APIKEYTTS = config.get("Settings", "APIKEYTTS") #Ключ API сервиса синтеза речи:
         PROVIDERSTT = config.get("Settings", "PROVIDERSTT") #Сервис распознования речи
         APIKEYSTT = config.get("Settings", "APIKEYSTT") #Ключ API сервиса распознования речи:
-        SENSITIVITY = config.get("Settings", "SENSITIVITY") #Чувствительность реагирования на ключевое слово
+        #SENSITIVITY = config.get("Settings", "SENSITIVITY") #Чувствительность реагирования на ключевое слово
         ALARMKWACTIVATED = config.get("Settings", "ALARMKWACTIVATED") #Сигнал о распозновании ключевого слова
         ALARMTTS = config.get("Settings", "ALARMTTS") #Сигнал перед сообщением
         ALARMSTT = config.get("Settings", "ALARMSTT") #Сигнал перед начале распознования речи
@@ -158,8 +149,9 @@ def getConfig (path):
         FIRSTBOOT = config.get("Boot", "firstboot")
         print ("Конфигурация загружена")
     except:
-        print ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
-#Узнаем IP адрес
+        say ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
+        sys.exit(0)
+        
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
@@ -168,18 +160,14 @@ def get_ip_address():
 getConfig (path)
 if FIRSTBOOT == "1":
     ip = (get_ip_address())
-    sleep (2.0)
     say ("Это первая загрузка терминала, мой IP адрес: "+ip)
 elif FIRSTBOOT == "0":
     say ("Терминал готов к работе")
-#    config.set("Boot", "firstboot", "0" )
-#    with open(path, "w") as config_file:
-#        config.write(config_file)
-#    getConfig (path)
+
 sock = socket.socket()
 sock.bind( ("", 7999) )
 sock.listen(1)
-#Основной цикл
+
 try:
     while 1: # работаем постоянно
         conn, addr = sock.accept()
