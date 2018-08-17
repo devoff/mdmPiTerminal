@@ -69,68 +69,73 @@ def parse(conn, addr):# обработка соединения в отдель�
     # берём только первую строку
     udata = udata.split("\r\n", 1)[0]
     print (udata)
-    # разбиваем по пробелам нашу строку
-    method, text = udata.split(":", maxsplit=1)
-    if method == 'tts' :
-       sleep(0.5)
-       say (text)
-    if method == 'ask' :
-       os.system("sudo service mdmpiterminal stop")
-       say(text)
-       detected()
-       os.system("sudo service mdmpiterminal start")
-    if method == 'settings' :
-       settings = text
-       translation_table = dict.fromkeys(map(ord, '{"}'), None)
-       settings = settings.translate(translation_table)
-       settings = (settings.split(','))
-       config = configparser.ConfigParser()
-       config.add_section("Settings")
-       for temp in settings:
-           obj, param = temp.split(":", maxsplit=1)
-           config.set("Settings", obj, param)
-           print (obj+":"+param)
-       config.add_section("Boot")
-       config.set("Boot", "firstboot", "0" )
-       with open(path, "w") as config_file:
-           config.write(config_file)
-       getConfig (path)
-    if method == 'rec' :
-        param = text.split("_") # должно быть вида rec_1_1, play_2_1, compile_5_1
-        a = param[0] # rec, play или compile
-        b = param[1] # 1-6
-        c = param[2] # 1-3
-        if a == "rec":
+    if udata == 'pause' :
+        os.system("mpc stop; mpc clear")
+    else:
+        # разбиваем по пробелам нашу строку
+        method, text = udata.split(":", maxsplit=1)
+        if method == 'play' :
+           os.system("mpc add "+text+";mpc play")
+        if method == 'tts' :
+           sleep(0.5)
+           say (text)
+        if method == 'ask' :
            os.system("sudo service mdmpiterminal stop")
-           say ("Запись на 5 секунд начнется после голосового сигнала")
-           try:
-               subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-               sleep(0.3)
-               subprocess.call(["rec", "/tmp/"+b+c+".wav"], timeout = 5)
-           except subprocess.TimeoutExpired:
-               subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-               sleep(0.3)
-               say ("Запись файла завершена")
-               os.system("sudo service mdmpiterminal start")
-        elif a == "play":
-           os.system("aplay /tmp/"+b+c+".wav")
+           say(text)
+           detected()
+           os.system("sudo service mdmpiterminal start")
+        if method == 'settings' :
+           settings = text
+           translation_table = dict.fromkeys(map(ord, '{"}'), None)
+           settings = settings.translate(translation_table)
+           settings = (settings.split(','))
+           config = configparser.ConfigParser()
+           config.add_section("Settings")
+           for temp in settings:
+               obj, param = temp.split(":", maxsplit=1)
+               config.set("Settings", obj, param)
+               print (obj+":"+param)
+           config.add_section("Boot")
+           config.set("Boot", "firstboot", "0" )
+           with open(path, "w") as config_file:
+               config.write(config_file)
+           getConfig (path)
+        if method == 'rec' :
+            param = text.split("_") # должно быть вида rec_1_1, play_2_1, compile_5_1
+            a = param[0] # rec, play или compile
+            b = param[1] # 1-6
+            c = param[2] # 1-3
+            if a == "rec":
+               os.system("sudo service mdmpiterminal stop")
+               say ("Запись на 5 секунд начнется после голосового сигнала")
+               try:
+                   subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                   sleep(0.3)
+                   subprocess.call(["rec", "/tmp/"+b+c+".wav"], timeout = 5)
+               except subprocess.TimeoutExpired:
+                   subprocess.Popen(["aplay", home+"/snd/ding.wav"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                   sleep(0.3)
+                   say ("Запись файла завершена")
+                   os.system("sudo service mdmpiterminal start")
+            elif a == "play":
+               os.system("aplay /tmp/"+b+c+".wav")
 
-        elif a == "compile":
-           say ("Отправляю модель на обработку");
-           try:
-               os.system(home+"/resources/training_service.sh /tmp/"+b+"1.wav /tmp/"+b+"2.wav /tmp/"+b+"3.wav "+home+"/resources/models/model"+b+".pmdl")
-               print (home+"/resources/training_service.sh /tmp/"+b+"1.wav /tmp/"+b+"2.wav /tmp/"+b+"3.wav convert to /resources/models/model"+b+".pmdl")
-               say ("Модель голоса создана успешно");
-           except:
-               say ("Произошла ошибка при отправке");
-        elif a == "save":
-            say ("Идет подготовка к перезагрузке");
-            sleep(0.3)
-            try:
-                os.system("sudo service mdmpiterminal restart")
-                say ("Готово")
-            except:
-                say ("Что-то пошло не так");
+            elif a == "compile":
+               say ("Отправляю модель на обработку");
+               try:
+                   os.system(home+"/resources/training_service.sh /tmp/"+b+"1.wav /tmp/"+b+"2.wav /tmp/"+b+"3.wav "+home+"/resources/models/model"+b+".pmdl")
+                   print (home+"/resources/training_service.sh /tmp/"+b+"1.wav /tmp/"+b+"2.wav /tmp/"+b+"3.wav convert to /resources/models/model"+b+".pmdl")
+                   say ("Модель голоса создана успешно");
+               except:
+                   say ("Произошла ошибка при отправке");
+            elif a == "save":
+                say ("Идет подготовка к перезагрузке");
+                sleep(0.3)
+                try:
+                    os.system("sudo service mdmpiterminal restart")
+                    say ("Готово")
+                except:
+                    say ("Что-то пошло не так");
 
 def getConfig (path):
     try:
@@ -151,7 +156,7 @@ def getConfig (path):
     except:
         say ("Не создан файл конфигурации или ошибка в файле, загрузите данные через модуль в МДМ")
         sys.exit(0)
-        
+
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
