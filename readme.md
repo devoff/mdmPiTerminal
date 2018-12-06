@@ -1,5 +1,5 @@
 # Голосовой ассистент для управления умным домом на базе MajorDomo.ru версии 1 #
-# Проект перерос во вторую версию, [mdmTerminal2] (https://github.com/Aculeasis/mdmTerminal2/) #
+# Проект перерос во вторую версию, [mdmTerminal2](https://github.com/Aculeasis/mdmTerminal2/) #
 ***
 
 Поддержка в телеграмм канале - https://t.me/mdmPiTerminal
